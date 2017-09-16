@@ -1,6 +1,9 @@
 ---
-layout: post
-title: First step
+title: First Step
+categories:
+ - TestTest
+tags:
+ - 吐槽
 ---
 
 跟风写个blog，不定期维护，懒癌晚期
