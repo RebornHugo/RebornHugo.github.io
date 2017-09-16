@@ -1,8 +1,9 @@
 ---
 title: Highlight Test
 categories:
- - Test
+ - TestTest
 tags:
+ - Coding
 ---
 
 This is a highlight test.
