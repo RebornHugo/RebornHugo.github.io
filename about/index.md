@@ -1,10 +1,10 @@
 ---
-title: about
+title: About
 layout: page
 ---
 
-## Hugo
-百本失败人士
+## Who Am I
+百本失败人士Hugo
 
 ### Major
 
