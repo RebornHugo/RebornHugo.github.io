@@ -3,9 +3,10 @@ title: about
 layout: page
 ---
 
-一个zs未遂的百本失败人士
+## Hugo
+百本失败人士
 
-# Major
+### Major
 
 * 机器遗忘
 * 神经病网络
@@ -13,6 +14,6 @@ layout: page
 * 数据填埋
 * 计算机弱视
 
-# Contact me
+### Contact me
 
 [hugo@nuaa.edu.cn](mailto:hugo@nuaa.edu.cn)
