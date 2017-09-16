@@ -225,14 +225,14 @@ social_icons:
   enable: true
   # Icon Mappings.
   # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome
-  GitHub: github
+  GitHub: RebornHugo
   Twitter: twitter
   Weibo: weibo
 
 
 # Sidebar Avatar
 # in directory: /assets/images/avatar.gif
-avatar: https://avatars1.githubusercontent.com/u/22868266?v=4&u=82b4b48067593b44459503b98d26fcbc3b2d5e84&s=400
+avatar: /assets/images/avatar.gif
 
 
 # Table Of Contents in the Sidebar
