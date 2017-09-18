@@ -150,9 +150,9 @@ menu_icons:
 # ---------------------------------------------------------------
 
 # Schemes
-#scheme: Muse
+scheme: Muse
 #scheme: Mist
-scheme: Pisces
+#scheme: Pisces
 
 
 # ---------------------------------------------------------------
@@ -216,6 +216,7 @@ social:
   #LinkLabel: Link
   Github: https://github.com/RebornHugo
   知乎: https://www.zhihu.com/people/he-hao-85-41/activities
+  
   Twitter: https://twitter.com/Reborn_Hugo
   Steam: http://steamcommunity.com/profiles/76561198092431149/
   
