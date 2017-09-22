@@ -1,11 +1,11 @@
 ---
 title: 泊松过程-指数分布-MarkovChain
 categories:
- - 机器学习算法
+ - Probability Theory
 tag:
  - 软件可靠性
-分析总结泊松过程，指数分布，隐式马尔可夫链之间的联系
 ---
+分析总结泊松过程，指数分布，隐式马尔可夫链之间的联系
 
 # Poisson Distribution
 
