@@ -88,6 +88,7 @@ $$P(X = n)=\frac{e^{-\lambda}\lambda^n}{n!}$$
 ## Markov Property
 ### Definition
 > 当一个随机过程在给定现在状态及所有过去状态情况下，其未来状态的条件概率分布仅依赖于**当前状态**；换句话说，在给定现在状态时，它与过去状态（即该过程的历史路径）是**条件独立**的，那么此随机过程即具有马尔可夫性质。具有马尔可夫性质的过程通常称之为马尔可夫过程。
+
 ### Math Model
 > 如果为$X(t),t>0$为一个随机过程，则**马尔可夫性质**就是指![https://wikimedia.org/api/rest_v1/media/math/render/svg/25a6129f9ba1a9ed334f56c45590db0743eabe58就是指](https://wikimedia.org/api/rest_v1/media/math/render/svg/25a6129f9ba1a9ed334f56c45590db0743eabe58)马尔可夫过程通常称其为（时间）齐次，如果满足
 ![https://wikimedia.org/api/rest_v1/media/math/render/svg/b635c7476d943f655adcba42f3e7a55ab8f5c079](https://wikimedia.org/api/rest_v1/media/math/render/svg/b635c7476d943f655adcba42f3e7a55ab8f5c079) 除此之外则被称为是（时间）非齐次的。
