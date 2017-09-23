@@ -92,7 +92,9 @@ $$P(X = n)=\frac{e^{-\lambda}\lambda^n}{n!}$$
 ### Math Model
 > 如果为$X(t),t>0$为一个随机过程，则**马尔可夫性质**就是指![https://wikimedia.org/api/rest_v1/media/math/render/svg/25a6129f9ba1a9ed334f56c45590db0743eabe58就是指](https://wikimedia.org/api/rest_v1/media/math/render/svg/25a6129f9ba1a9ed334f56c45590db0743eabe58)马尔可夫过程通常称其为（时间）齐次，如果满足
 ![https://wikimedia.org/api/rest_v1/media/math/render/svg/b635c7476d943f655adcba42f3e7a55ab8f5c079](https://wikimedia.org/api/rest_v1/media/math/render/svg/b635c7476d943f655adcba42f3e7a55ab8f5c079) 除此之外则被称为是（时间）非齐次的。
+
 ## Markov Process
+
  ~ | **可数或有限的状态空间** | **连续或一般的状态空间**
 ---------|----------|---------
  **离散时间** |在可数且有限状态空间下的马尔可夫链| Harris chain (在一般状态空间下的马尔可夫链)
@@ -100,6 +102,7 @@ $$P(X = n)=\frac{e^{-\lambda}\lambda^n}{n!}$$
 ## Markov chain
 ### Definition
 > 又称离散时间马尔可夫链。为状态空间中经过从一个状态到另一个状态的转换的随机过程。该过程要求具备“无记忆”的性质：下一状态的概率分布只能由当前状态决定，在时间序列中它前面的事件均与之无关。
+
 ### Math Model
 马尔可夫链是满足马尔可夫性质的随机变量序列$X1, X2, X3, ...$，即给出当前状态，将来状态和过去状态是相互独立的。从形式上看，
 如果两边的条件分布有定义（即如果
