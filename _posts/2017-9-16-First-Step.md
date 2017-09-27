@@ -14,5 +14,5 @@ tags:
 ## 三
 如果后面没更新，可能是因为blog没有kernel，在jupyter notebook上更新了。
 
-在这儿  [**notebook address**](http://118.89.161.52:8888/tree?)  ~~反正你们也打不开还是放弃吧hhhhh~~ 
+在这儿  [**notebook address**](http://118.89.161.52:8888/?token=f824a5b211bef87ec2a150b175cb58d3c9fb4d854f34cbb1)  ~~反正你们也打不开还是放弃吧hhhhh~~ 
 
