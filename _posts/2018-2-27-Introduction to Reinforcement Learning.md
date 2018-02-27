@@ -178,7 +178,7 @@ Major Components of an RL Agent
 * A policy is the agent’s behaviour
 * It is a **map** from **state** to **action**， e.g.
 * **Deterministic** policy: $a=\pi(s)$
-* **Stochastic** policy: $\pi(a|s)=P[A_t=a|S_t=s]$
+* **Stochastic** policy:  $$\pi(a|s)=P[A_t=a|S_t=s]$$
 
 ### Value Function
 
@@ -219,3 +219,15 @@ build a model is not always required !!!
   * The agent performs computations with its model (without any external interaction)
   * The agent improves its policy
 
+
+### Exploration and Exploitation Trade Off
+
+**Exploration** finds more information about the environment
+**Exploitation** exploits known information to maximise reward
+
+### Prediction and Control
+
+* Prediction: evaluate the future
+  * Given a policy
+* Control: optimise the future
+  * Find the best policy
