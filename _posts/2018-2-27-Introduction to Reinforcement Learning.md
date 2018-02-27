@@ -95,6 +95,7 @@ All goals can be described by the maximisation of expected cumulative reward
 
 
 
+
 ### Environment State
 
 * The environment state $S_t^e$ is the environment’s private representation
@@ -112,6 +113,7 @@ All goals can be described by the maximisation of expected cumulative reward
   $$
   S_t=f(H_t)
   $$
+
 
 
 
@@ -178,7 +180,7 @@ Major Components of an RL Agent
 * A policy is the agent’s behaviour
 * It is a **map** from **state** to **action**， e.g.
 * **Deterministic** policy: $a=\pi(s)$
-* **Stochastic** policy:  $$\pi(a|s)=P[A_t=a|S_t=s]$$
+* **Stochastic** policy: $\pi(a|s)=P[A_t=a|S_t=s]$
 
 ### Value Function
 
