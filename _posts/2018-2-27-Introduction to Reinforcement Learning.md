@@ -92,6 +92,9 @@ All goals can be described by the maximisation of expected cumulative reward
 
 
 
+
+
+
 ### Environment State
 
 * The environment state $S_t^e$ is the environment’s private representation
@@ -109,6 +112,9 @@ All goals can be described by the maximisation of expected cumulative reward
   $$
   S_t=f(H_t)
   $$
+
+
+
 
 
 
@@ -158,4 +164,58 @@ $$O_t = S_t^a=S_t^e$$
   * Complete history: $S_t^a=H_t$
   * **Beliefs** of environment state:$S_t^a=(P[S_t^e=s^n])$
   * Recurrent neural network: $S_t^a=\sigma(S_{t-1}^aW_s+O_tW_o)$
+
+## Inside An RL Agent
+
+Major Components of an RL Agent
+
+* Policy: agent’s behaviour function
+* Value function: how good is each state and/or action
+* Model: agent’s representation of the environment
+
+### Policy
+
+* A policy is the agent’s behaviour
+* It is a **map** from **state** to **action**， e.g.
+* **Deterministic** policy: $a=\pi(s)$
+* **Stochastic** policy: $\pi(a|s)=P[A_t=a|S_t=s]$
+
+### Value Function
+
+* Value function is a prediction of future reward **(expected future total reward)**
+
+* Used to evaluate the goodness/badness of states
+
+* And therefore to select between actions, e.g.
+
+  $$v_\pi(s)=E_{\pi}[R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+...|S_t=s]$$
+
+### Model
+
+build a model is not always required !!!
+
+* A **model** predicts what the environment will do next
+
+* **Transitions**: $\mathcal{P}$ predicts the next state. (state transition model)
+
+* **Rewards**: $\mathcal{R}$ predicts the next (immediate) reward, e.g.
+
+  $$\mathcal{P}_{ss\prime}^a=\mathbb{P}[S_{t+1}=s\prime|S_t=s,A_t=a]$$
+
+  $$\mathcal{R}_s^a=\mathbb{E}[R_{t+1}|S_t=s, A_t=a]$$
+
+### RL Agent Taxonomy
+
+![rl agent taxonomy](\assets\images\post_images\强化学习1\rl agent taxonomy.PNG)
+
+### Learning and Planning
+
+* Reinforcement Learning
+  * The environment is initially unknown
+  * The agent interacts with the environment
+  * The agent improves its policy
+* Planning
+  * A model of the environment is known
+  * The agent performs computations with its model (without any external interaction)
+  * The agent improves its policy
 
