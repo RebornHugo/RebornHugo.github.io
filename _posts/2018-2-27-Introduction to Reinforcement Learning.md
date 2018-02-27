@@ -5,7 +5,7 @@ categories:
 tag:
  - ML
 ---
-Reinforcement learning 是LeCun所说的cake顶端的cherry，可见是非常有意思了。David Silver的公开课非常出名，今天立一个flag三月底之前，学完全部课程并且完成project。
+Reinforcement learning 是LeCun所说cake顶端的cherry，可见是非常有意思了。David Silver的公开课非常著名。立一个flag，三月底之前，学完全部课程并且完成project。
 
 # Material
 
@@ -21,7 +21,7 @@ Reinforcement learning 是LeCun所说的cake顶端的cherry，可见是非常有
 
 ## Many Faces of RL
 
-![many_faces_of_RL](..\assets\images\post_images\强化学习1\many_faces_of_RL.PNG)
+![many_faces_of_RL](\assets\images\post_images\强化学习1\many_faces_of_RL.PNG)
 
 ## Differences of other ML paradigms and  RL
 
@@ -59,7 +59,7 @@ All goals can be described by the maximisation of expected cumulative reward
 
 ### Agent and Environment
 
-## ![environments](..\assets\images\post_images\强化学习1\environments.PNG)
+## ![environments](\assets\images\post_images\强化学习1\environments.PNG)
 
 ## State
 
@@ -90,6 +90,8 @@ All goals can be described by the maximisation of expected cumulative reward
 
 
 
+
+
 ### Environment State
 
 * The environment state $S_t^e$ is the environment’s private representation
@@ -97,7 +99,7 @@ All goals can be described by the maximisation of expected cumulative reward
 * The environment state is not usually visible to the agent
 * Even if $S_t^e$ is visible, it may contain irrelevant information
 
-## Agent State
+### Agent State
 
 * The agent state  $S_t^e$ is the agent’s internal representation
 * i.e. whatever information the agent uses to pick the next action
@@ -111,11 +113,13 @@ All goals can be described by the maximisation of expected cumulative reward
 
 
 
-## Information State
+
+
+### Information State
 
 An information state (a.k.a.(*also known as*) **Markov state**) contains all useful information from the history.
 
-### Definition
+Definition
 
 > A state  $S_t^e$ is Markov if and only if 
 > $$
@@ -129,6 +133,29 @@ An information state (a.k.a.(*also known as*) **Markov state**) contains all use
   $$
 
 * Once the state is known, the history may be thrown away
+
 * i.e. The state is a sufficient statistic of the future
+
 * The environment state $S_t^e$ is Markov
+
 * The history $H_t$ is Markov
+
+### Fully Observable Environments
+**Full observability**: agent **directly** observes environment state
+
+$$O_t = S_t^a=S_t^e$$
+
+* Agent state = environment state = information state
+* Formally, this is a **Markov decision process** (MDP)
+
+### Partially Observable Environments
+
+**Partial observability**: agent **indirectly** observes environment
+
+* Now agent state $\neq $ environment state
+* Formally this is a **partially observable Markov decision process**(POMDP)
+* Agent must construct its own state representation $S_t^a$, e.g.
+  * Complete history: $S_t^a=H_t$
+  * **Beliefs** of environment state:$S_t^a=(P[S_t^e=s^n])$
+  * Recurrent neural network: $S_t^a=\sigma(S_{t-1}^aW_s+O_tW_o)$
+
