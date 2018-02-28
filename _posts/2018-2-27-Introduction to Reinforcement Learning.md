@@ -180,7 +180,7 @@ Major Components of an RL Agent
 * A policy is the agent’s behaviour
 * It is a **map** from **state** to **action**， e.g.
 * **Deterministic** policy: $a=\pi(s)$
-* **Stochastic** policy:   $\pi(a|s)=\mathbb{P}[A_t=a|S_t=s]$
+* **Stochastic** policy:  $\pi(a|s)=\mathbb{P}[A_t=a|S_t=s]$
 
 ## Value Function
 
