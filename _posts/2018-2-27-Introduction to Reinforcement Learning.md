@@ -1,11 +1,11 @@
 ---
-title: David Silver 强化学习 1
+title: RL-1 Introduction to Reinforcement Learning
 categories:
  - Reinforcement Learning
 tag:
- - ML
+ - ML,RL
 ---
-Reinforcement learning 是LeCun所说cake顶端的cherry，可见是非常有意思了。David Silver的公开课非常著名。立一个flag，三月底之前，学完全部课程并且完成project。
+Reinforcement learning 是LeCun所说cake顶端的cherry，可见是非常有意思了。David Silver的公开课非常著名。立一个flag，三月底之前，学完全部课程并且完成project。这篇blog是david silver第一讲的笔记，对RL做了一个简介，并着重讲解了什么是RL problem。
 
 # Material
 
@@ -167,7 +167,7 @@ $$O_t = S_t^a=S_t^e$$
   * **Beliefs** of environment state:$S_t^a=(P[S_t^e=s^n])$
   * Recurrent neural network: $S_t^a=\sigma(S_{t-1}^aW_s+O_tW_o)$
 
-## Inside An RL Agent
+# Inside An RL Agent
 
 Major Components of an RL Agent
 
@@ -175,14 +175,14 @@ Major Components of an RL Agent
 * Value function: how good is each state and/or action
 * Model: agent’s representation of the environment
 
-### Policy
+## Policy
 
 * A policy is the agent’s behaviour
 * It is a **map** from **state** to **action**， e.g.
 * **Deterministic** policy: $a=\pi(s)$
-* **Stochastic** policy: $\pi(a|s)=P[A_t=a|S_t=s]$
+* **Stochastic** policy:   $\pi(a|s)=\mathbb{P}[A_t=a|S_t=s]$
 
-### Value Function
+## Value Function
 
 * Value function is a prediction of future reward **(expected future total reward)**
 
@@ -192,7 +192,7 @@ Major Components of an RL Agent
 
   $$v_\pi(s)=E_{\pi}[R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+...|S_t=s]$$
 
-### Model
+## Model
 
 build a model is not always required !!!
 
@@ -206,11 +206,13 @@ build a model is not always required !!!
 
   $$\mathcal{R}_s^a=\mathbb{E}[R_{t+1}|S_t=s, A_t=a]$$
 
-### RL Agent Taxonomy
+## RL Agent Taxonomy
 
 ![rl agent taxonomy](\assets\images\post_images\强化学习1\rl agent taxonomy.PNG)
 
-### Learning and Planning
+# Problems within RL
+
+## Learning and Planning
 
 * Reinforcement Learning
   * The environment is initially unknown
@@ -222,12 +224,12 @@ build a model is not always required !!!
   * The agent improves its policy
 
 
-### Exploration and Exploitation Trade Off
+## Exploration and Exploitation Trade Off
 
 **Exploration** finds more information about the environment
 **Exploitation** exploits known information to maximise reward
 
-### Prediction and Control
+## Prediction and Control
 
 * Prediction: evaluate the future
   * Given a policy
