@@ -37,7 +37,9 @@ typora-copy-images-to: ..\assets\images\post_images\强化学习2
 
 **Definition**
 
-A state $S_t$is *Markov* if and only if $$\mathbb{P}[S_{t+1}|S_t]=\mathbb{P}[S_{t+1}|S_1,...,S_t]$$
+A state $S_t$is *Markov* if and only if
+
+ $$\mathbb{P}[S_{t+1}|S_t]=\mathbb{P}[S_{t+1}|S_1,...,S_t]$$
 
 * The state captures all relevant information from the history
 * Once the state is known, the history may be thrown away
@@ -45,7 +47,7 @@ A state $S_t$is *Markov* if and only if $$\mathbb{P}[S_{t+1}|S_t]=\mathbb{P}[S_{
 
 ### State Transition Matrix
 
-![State Transition Matrix](.\assets\images\post_images\强化学习2\State Transition Matrix.PNG)
+![State Transition Matrix](/assets/images/post_images/强化学习2/State Transition Matrix.PNG)
 
 ## Markov Chains
 
@@ -109,7 +111,7 @@ $$v(s)=\mathbb{E}[G_t|S_t=s]$$
 
 ### Example: Student MRP Returns
 
-![example1](.\assets\images\post_images\强化学习2\example1.PNG)
+![example1](/assets/images/post_images/强化学习2/example1.PNG)
 
 **NOTICE!!!**
 
@@ -137,11 +139,11 @@ The value function can be decomposed into two parts:
 * immediate reward $R_{t+1}$
 * discounted value of successor state $\gamma v(S_{t+1})$
 
-![bellman equation1](.\assets\images\post_images\强化学习2\bellman equation1.PNG)
+![bellman equation1](/assets/images/post_images/强化学习2/bellman equation1.PNG)
 
 ![1519908935088](/assets/images/post_images/强化学习2/1519908935088.png)
 
-### Bellman Equation in Matrix Form(**重点**)![bellman equation2](.\assets\images\post_images\强化学习2\bellman equation2.PNG)
+### Bellman Equation in Matrix Form(**重点**)![bellman equation2](/assets/images/post_images/强化学习2/bellman equation2.PNG)
 
 ### Solving the Bellman Equation
 
@@ -209,7 +211,7 @@ $$\pi(a|s)=\mathbb{P}[A_t=a|S_t=s]$$
 >
 > time-independent 但是 state dependent
 
-![policy](.\assets\images\post_images\强化学习2\policy.PNG)
+![policy](/assets/images/post_images/强化学习2/policy.PNG)
 
 ## Value Function
 
@@ -260,3 +262,4 @@ Define a partial ordering over policies
 
 $$\pi\ge\pi\prime \hspace{2mm} if  \hspace{2mm} v_\pi(s)\ge v_{\pi\prime}(s),\forall s$$
 
+![1520145255686](/assets/images/post_images/强化学习2/1520145255686.png)
