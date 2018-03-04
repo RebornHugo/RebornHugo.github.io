@@ -60,7 +60,8 @@ A Markov process is a memoryless random process, i.e. a sequence of random state
 A Markov Process (or Markov Chain) is a tuple $<S,\mathcal{P}>$
 
 * $\mathcal{S}$ is a  (finite) set of states
-* $\mathcal{P}$ is a state transition probability matrix, $$\mathcal{P}_{ss\prime}=\mathbb{P}[S_{t+1}=s\prime|S_t=s]$$
+* $\mathcal{P}​$ is a state transition probability matrix, 
+  $$\mathcal{P}_{ss\prime}=\mathbb{P}[S_{t+1}=s\prime|S_t=s]$$
 
 # Markov Reward Process
 
@@ -75,9 +76,11 @@ A *Markov Reward Process* is a tuple $<\mathcal{S,P,R,\gamma}>$
 
 * $\mathcal{P}$ is a state transition probability matrix,
 
-  $\mathcal{P_{ss\prime}=}\mathbb{P}[\mathcal{S_{t+1}}=s\prime|S_t=s]$
+  $$\mathcal{P_{ss\prime}=}\mathbb{P}[\mathcal{S_{t+1}}=s\prime|S_t=s]$$
 
-* $\mathcal{R}$ is a reward function, $\mathcal{R_s}= \mathbb{E}[R_{t+1}|S_t=s]$
+* $\mathcal{R}$ is a reward function, 
+
+  $$\mathcal{R_s}= \mathbb{E}[R_{t+1}|S_t=s]$$
 
 * $\gamma$  is a  discount factor, $\gamma \in[0,1]$ 
 
@@ -181,9 +184,11 @@ A *Markov Decision Process* is a tuple $<\mathcal{S,A,P,R,\gamma}>$
 
 * $\mathcal{P}$ is a state transition probability matrix,
 
-  $\mathcal{P_{ss\prime}^a=}\mathbb{P}[\mathcal{S_{t+1}}=s\prime|S_t=s,A_t=a]$
+  $$\mathcal{P_{ss\prime}^a=}\mathbb{P}[\mathcal{S_{t+1}}=s\prime|S_t=s,A_t=a]$$
 
-* $\mathcal{R}$ is a reward function, $\mathcal{R_s^a}= \mathbb{E}[R_{t+1}|S_t=s,A_t=a]$
+* $\mathcal{R}$ is a reward function, 
+
+  $$\mathcal{R_s^a}= \mathbb{E}[R_{t+1}|S_t=s,A_t=a]$$
 
 * $\gamma$  is a  discount factor, $\gamma \in[0,1]$ 
 
