@@ -7,7 +7,7 @@ tag:
 typora-root-url: ..
 typora-copy-images-to: ..\assets\images\post_images\强化学习2
 ---
-这一节讲了MP, MRP, MDP, **Bellman Equation**以及解法。
+这一节讲了MP, MRP, MDP, **Bellman Equation**,optimal的含义与以及解法。
 
 # Material
 

@@ -4,6 +4,9 @@ categories:
  - Reinforcement Learning
 tag:
  - ML,RL
+
+typora-copy-images-to: ..\assets\images\post_images\强化学习1
+typora-root-url: ..
 ---
 Reinforcement learning 是LeCun所说cake顶端的cherry，可见是非常有意思了。David Silver的公开课非常著名。立一个flag，三月底之前，学完全部课程并且完成project。这篇blog是david silver第一讲的笔记，对RL做了一个简介，并着重讲解了什么是RL problem。
 
@@ -97,6 +100,8 @@ All goals can be described by the maximisation of expected cumulative reward
 
 
 
+
+
 ### Environment State
 
 * The environment state $S_t^e$ is the environment’s private representation
@@ -114,6 +119,8 @@ All goals can be described by the maximisation of expected cumulative reward
   $$
   S_t=f(H_t)
   $$
+
+
 
 
 
