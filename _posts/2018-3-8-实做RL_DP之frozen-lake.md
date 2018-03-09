@@ -38,7 +38,7 @@ typora-root-url: ..
 
 简而言之，就是从start出发，经过frozen，到达goal，如果顺利到达，则得到1的reward，如果落入hole，则获得0的reward。RL agent的target永远是maximize **expaected feature discounted total reward**，可以采用DP的方法来解决问题。
 
-# Intro to [Gym](https://gym.openai.com/docs/#available-environments)
+# Intro to Gym
 
 [官方文档](https://gym.openai.com/docs/#available-environments)有使用教程, 核心API在[这里](https://github.com/openai/gym/blob/master/gym/core.py), example在[这里](https://github.com/openai/gym/tree/master/examples), 这里仅对几个功能进行说明：
 
@@ -156,6 +156,10 @@ def step(self, action):
 
 # Solution
 
+主要思想如下图：
+
+![img](https://i.stack.imgur.com/wGuj5.png)
+
 首先map数字到上下左右
 
 ```python
@@ -172,9 +176,9 @@ action_mapping = {
 
 ## Policy Iteration
 
-![img](https://i.stack.imgur.com/wGuj5.png)
+### policy evaluation
 
-首先是policy evaluation，重点是这里的四重循环：
+重点是这里的四重循环：
 
 ```python
 # Repeat until value change is below the threshold
@@ -199,6 +203,179 @@ action_mapping = {
                     v += action_probability * state_probability * (reward + discount_factor * V[next_state])
 ```
 
+第一层循环是添加迭代的上限，防止无限迭代。
+最外层的终止条件：`delta < theta` 这里的delte，是指在一次循环中变化最大的state的state value function的变化量，当小于theta（这里是1e-9）时，说明近乎converge，循环结束外层循环，否则继续，直到max_iter再终止。
+
 david silver说过
 
->Complexity 是 $O(mn^2) $per iteration, for m actions and n states
+> Complexity 是 $O(mn^2) $per iteration, for m actions and n states
+
+对应的是这里的后三层循环。
+
+第二层：对选定的current state遍历。
+
+第三层：对当前状态下可能采取的action遍历(使用policy[state])
+
+第四层：在current state以及采取了特定的action情况下可能转移到的next state进行遍历（使用environment.P[state][action\]）
+
+* 后三层是对Bellman Expectation Equation for state value funtion 的具体实现
+
+  ![1520562916986](/assets/images/post_images/实做动态规划/1520562916986.png)
+
+### policy iteration
+
+```python
+    # Repeat until convergence or critical number of iterations reached
+    for i in range(int(max_iter)):
+
+        stable_policy = True
+
+        # Evaluate current policy
+        V = policy_evaluation(policy, environment, discount_factor=discount_factor)
+
+        # Go through each state and try to improve actions that were taken
+        for state in range(environment.nS):
+
+            # Choose the best action in a current state under current policy
+            current_action = np.argmax(policy[state])
+
+            # Look one step ahead and evaluate if current action is optimal
+            # We will try every possible action in a current state
+            action_value = one_step_lookahead(environment, state, V, discount_factor)
+
+            # Select a better action
+            best_action = np.argmax(action_value)
+
+            # If action didn't change
+            if current_action != best_action:
+                stable_policy = False
+
+            # Greedy policy update
+            policy[state] = np.eye(environment.nA)[best_action]
+
+        evaluated_policies += 1
+```
+
+policy iteration 主要是调用写好的policy evaluation然后进行Greedy Policy Improvement。
+
+greedy 的做法是使用policy evaluation后的state value function对每个state进行one_step_lookahead，即寻找到当前state的action_value（A vector of length nA containing the expected value of each action)
+
+> 注意：policy evaluation 计算的是state value function， 这里的action_value 是action value function，就是david ppt上的q。
+
+![1520564922186](/assets/images/post_images/实做动态规划/1520564922186.png)
+
+计算出每个state的action_value就可以derive出当前policy下的best action，并且进行
+
+```python
+# Greedy policy update
+policy[state] = np.eye(environment.nA)[best_action]
+```
+
+判断和当前policy[state]下的current action是否相同，如果所有state的current action 已经是best action了，则已找到optimal policy。
+
+
+
+## Value Iteration
+
+以下摘自stackoverflow
+>  **Value iteration** includes: **finding optimal value function** + one **policy extraction**. There is no repeat of the two because once the value function is optimal, then the policy out of it should also be optimal (i.e. converged).
+
+###  finding optimal value function 
+
+首先，使用Bellman Optimality(注意不是 ~~expected~~)Equation 找到optimal value funtion
+
+```python
+    for i in range(int(max_iterations)):
+
+        # Early stopping condition
+        delta = 0
+
+        # Update each state
+        for state in range(environment.nS):
+
+            # Do a one-step lookahead to calculate state-action values
+            action_value = one_step_lookahead(environment, state, V, discount_factor)
+
+            # Select best action to perform based on the highest state-action value
+            best_action_value = np.max(action_value)
+
+            # Calculate change in value
+            delta = max(delta, np.abs(V[state] - best_action_value))
+
+            # Update the value function for current state
+            V[state] = best_action_value
+
+        # Check if we can stop
+        if delta < theta:
+            print(f'Value-iteration converged at iteration#{i}.')
+            break
+```
+
+计算current state value 时，要先进行one_step_lookahead，找到当前state下的所有action_value，然后取max，即为best_action_value，即为当前state的optimality value function。
+
+![1520566079439](/assets/images/post_images/实做动态规划/1520566079439.png)
+
+### policy extraction
+
+然后进行 one **policy extraction**，不用像policy improvement一样和policy evaluation 一起迭代。
+
+``` python
+    # Create a deterministic policy using the optimal value function
+    policy = np.zeros([environment.nS, environment.nA])
+
+    for state in range(environment.nS):
+
+        # One step lookahead to find the best action for this state
+        action_value = one_step_lookahead(environment, state, V, discount_factor)
+
+        # Select best action based on the highest state-action value
+        best_action = np.argmax(action_value)
+
+        # Update the policy to perform a better action at a current state
+        policy[state, best_action] = 1.0
+
+    return policy, V
+```
+
+对每一个state进行one_step_lookahead，找到当前state的best action，然后`policy[state, best_action] = 1.0`，即让给定state下采取best_action的概率设为1。
+
+> 注意在policy extraction之前并没有使用到过policy。
+
+以上是核心过程，最后在play_episodes中调用两种方法return 的policy，然后使用`environment.step(action)`即可。
+
+```python
+def play_episodes(environment, n_episodes, policy):
+    wins = 0
+    total_reward = 0
+
+    for episode in range(n_episodes):
+
+        terminated = False
+        state = environment.reset()
+
+        while not terminated:
+
+            # Select best action to perform in a current state
+            action = np.argmax(policy[state])
+
+            # Perform an action an observe how environment acted in response
+            next_state, reward, terminated, info = environment.step(action)
+
+            # Summarize total reward
+            total_reward += reward
+
+            # Update current state
+            state = next_state
+
+            # Calculate number of wins over episodes
+            if terminated and reward == 1.0:
+                wins += 1
+
+    average_reward = total_reward / n_episodes
+
+    return wins, total_reward, average_reward
+```
+
+# Answer Screenshot
+
+![1520566859763](/assets/images/post_images/实做动态规划/1520566859763.png)
