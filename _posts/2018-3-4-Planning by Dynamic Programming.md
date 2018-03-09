@@ -69,7 +69,7 @@ david课上以及Sutton的书上都有一个Jack’s Car Rental的example。
 
 ## Policy Improvement（含证明）
 
-![1520339482788](C:\Users\51163\AppData\Local\Temp\1520339482788.png)
+![1520339482788](/assets/images/post_images/强化学习3/1520339482788.png)
 
 ![1520339633167](/assets/images/post_images/强化学习3/1520339633167.png)
 
