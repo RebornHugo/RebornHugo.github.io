@@ -88,7 +88,7 @@ A *Markov Reward Process* is a tuple $<\mathcal{S,P,R,\gamma}>$
 
 **Definition**
 
-The **return $G_t$** is the total discounted reward from time-step t.
+The **return $G_t​$** is the total discounted reward from time-step t.
 
 $$G_t = R_{t+1}+\gamma R_{t+2}+...=\sum_{k=0}^{\infty}\gamma ^kR_{t+k+1}$$
 

@@ -1,9 +1,9 @@
 ---
-title: RL-3 实做RL_DP之frozen-lake
+title: RL-4 实做RL_DP之frozen-lake
 categories:
  - Reinforcement Learning
 tag:
- - ML,RL,Coding
+ - Coding
 
 typora-copy-images-to: ..\assets\images\post_images\实做动态规划
 typora-root-url: ..

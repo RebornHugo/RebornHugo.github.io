@@ -3,7 +3,7 @@ title: RL-3 Planning by Dynamic Programming
 categories:
  - Reinforcement Learning
 tag:
- - ML,RL
+ - RL
 
 typora-copy-images-to: ..\assets\images\post_images\强化学习3
 typora-root-url: ..
