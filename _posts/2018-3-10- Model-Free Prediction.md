@@ -8,11 +8,11 @@ tag:
 typora-copy-images-to: ..\assets\images\post_images\Model-Free Prediction
 typora-root-url: ..
 ---
-Model Free 是指
+Model-free control 是指
 
-> Estimate the value function of an unknown MDP
+>  Optimise the value function of an unknown MDP
 
-对于没有model的问题进行prediction（本节课不考虑control），主要介绍了Monte-Carlo学习算法，Temporal-Difference算法（TD(0)）以及其推广延伸的TD($\lambda$)
+对于没有model的问题进行prediction（本节课不考虑control），主要介绍了Monte-Carlo学习算法，Temporal-Difference算法（TD(0)）以及其推广延伸的TD($\lambda$)，需要理解$TD(\lambda)$的前向和后向视角。
 
 # Material
 
@@ -96,3 +96,65 @@ The mean µ1, µ2, ... of a sequence x1, x2, ... can be computed **incrementally
 ![52112159713](/assets/images/post_images/Model-Free Prediction/1521121597130.png)
 
 ![52112166794](/assets/images/post_images/Model-Free Prediction/1521121667940.png)
+
+## Batch MC and TD
+
+![52181149467](/assets/images/post_images/Model-Free Prediction/1521811494674.png)
+
+![52181157139](/assets/images/post_images/Model-Free Prediction/1521811571394.png)
+
+## Unified View
+
+![52181160011](/assets/images/post_images/Model-Free Prediction/1521811600112.png)
+
+![52181161792](/assets/images/post_images/Model-Free Prediction/1521811617921.png)
+
+![52181163193](/assets/images/post_images/Model-Free Prediction/1521811631930.png)
+
+![52181165385](/assets/images/post_images/Model-Free Prediction/1521811653857.png)
+
+> bootstrap是向前推导，自举。Sample是采样，采取action向前走一个step或者多个step直至一整个episode。
+
+![52181176648](/assets/images/post_images/Model-Free Prediction/1521811766480.png)
+
+# TD(λ)
+
+## n-Step TD
+
+使用n-step return 来作为TD target即可
+
+![52181180896](/assets/images/post_images/Model-Free Prediction/1521811808968.png)
+
+![52181188285](/assets/images/post_images/Model-Free Prediction/1521811882857.png)
+
+## Forward View of TD(λ)
+
+![52181195230](/assets/images/post_images/Model-Free Prediction/1521811952304.png)
+
+![52181198505](/assets/images/post_images/Model-Free Prediction/1521811985059.png)
+
+> 很容易推导每一个step的系数都加起来，最终的和为1
+
+![52181212616](/assets/images/post_images/Model-Free Prediction/1521812126162.png)
+
+## Backward View TD(λ)
+
+* Forward view provides theory
+* Backward view provides mechanism
+* Update online, every step, from incomplete sequences
+
+### Eligibility Traces
+
+![52181218232](/assets/images/post_images/Model-Free Prediction/1521812182328.png)
+
+这是一个较难理解的概念，我的理解是对每个state都要分配credit或者说是weight，对应到公示上就是一个系数$E_t(s)$，在这里用一个table来存储（在下一节function approximation里面可以用nn）。这里的Eligibility Traces的计算规则很简单，如上图所示，含义是对recency和frequency的state分配更多的credit。
+
+## Relationship Between Forward and Backward TD
+
+当$\lambda$为0时是TD(0), $\lambda$为1时是MC
+
+![52181245977](/assets/images/post_images/Model-Free Prediction/1521812459777.png)
+
+![52181247238](/assets/images/post_images/Model-Free Prediction/1521812472380.png)
+
+![52181249737](/assets/images/post_images/Model-Free Prediction/1521812497370.png)
