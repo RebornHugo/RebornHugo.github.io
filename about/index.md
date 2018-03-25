@@ -4,10 +4,11 @@ layout: page
 ---
 
 ## Who Am I
-百本失败人士Hugo
+百本失败人士Hugo，搬砖中
 
 ### Major
 
+* 弱化学习
 * 机器遗忘
 * 神经病网络
 * 人工智障

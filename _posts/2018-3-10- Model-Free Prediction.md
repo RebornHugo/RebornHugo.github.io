@@ -8,7 +8,7 @@ tag:
 typora-copy-images-to: ..\assets\images\post_images\Model-Free Prediction
 typora-root-url: ..
 ---
-Model-free control 是指
+Model-free prediction是指
 
 >  Optimise the value function of an unknown MDP
 
