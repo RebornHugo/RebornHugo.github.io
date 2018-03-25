@@ -8,13 +8,14 @@ tag:
 typora-copy-images-to: ..\assets\images\post_images\Model-Free Control
 typora-root-url: ..
 ---
-# Intro
 
 Model-free control 是指
 
 > Optimise the value function of an unknown MDP
 
-与model free predict 衔接，本节重点GLIE Monte-Carlo Control，SARSA, SARSA$(\lambda)$, Q Learning
+本节与model free predict 衔接，重点GLIE Monte-Carlo Control，SARSA, SARSA$(\lambda)$, Q Learning
+
+# Intro
 
 ## Uses of Model-Free Control
 
