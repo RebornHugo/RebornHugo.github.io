@@ -10,7 +10,7 @@ typora-root-url: ..
 ---
 Model-free prediction是指
 
->  Optimise the value function of an unknown MDP
+>  Estimate the value function of an unknown MDP
 
 对于没有model的问题进行prediction（本节课不考虑control），主要介绍了Monte-Carlo学习算法，Temporal-Difference算法（TD(0)）以及其推广延伸的TD($\lambda$)，需要理解$TD(\lambda)$的前向和后向视角。
 
