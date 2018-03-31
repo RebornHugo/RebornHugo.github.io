@@ -149,6 +149,8 @@ The mean µ1, µ2, ... of a sequence x1, x2, ... can be computed **incrementally
 
 这是一个较难理解的概念，我的理解是对每个state都要分配credit或者说是weight，对应到公示上就是一个系数$E_t(s)$，在这里用一个table来存储（在下一节function approximation里面可以用nn）。这里的Eligibility Traces的计算规则很简单，如上图所示，含义是对recency和frequency的state分配更多的credit。
 
+![52241736262](/assets/images/post_images/Model-Free Prediction/1522417362622.png)
+
 ## Relationship Between Forward and Backward TD
 
 当$\lambda$为0时是TD(0), $\lambda$为1时是MC

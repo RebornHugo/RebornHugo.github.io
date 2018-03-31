@@ -31,7 +31,7 @@ For most of these problems, either:
 
 ![52180050214](/assets/images/post_images/Model-Free Control/1521800502145.png)
 
-> 二者本质区别在于实际take action的**behaviour** policy $\mu$与进行Evaluate 计算$v_{\pi}(s) 与q_{\pi}(s,a)$的 **target** policy π 是否是同一个policy。
+> 二者本质区别在于实际take action的**behaviour** policy $\mu$与进行Evaluate 计算$v_{\pi}(s) 与q_{\pi}(s,a)$的 **target** policy π 是否是同一个policy。像q-learning这种off policy方法进行evaluate的next action并不一定是真正采取的next action。
 
 # Material
 
@@ -115,8 +115,57 @@ For most of these problems, either:
 
 > stochastic approximation theory
 
-n-Step Sarsa
+#### n-Step Sarsa
 
 ![52181122765](/assets/images/post_images/Model-Free Control/1521811227650.png)
 
 >  类比n-Step TD, 使用n-step Q-return来作为target即可
+
+#### Forward View Sarsa(λ)
+
+![52241625680](/assets/images/post_images/Model-Free Control/1522416256804.png)
+
+> 对每一个$q_t^{(n)}$的系数weight累加，和为1（等比数列）。
+
+#### Backward View Sarsa(λ)
+
+![52241636492](/assets/images/post_images/Model-Free Control/1522416364923.png)
+
+> eligibility traces，与上一节相同。维护一个eligibility table E, 对recency和frequency的state分配更多的credit。
+
+![52241661207](/assets/images/post_images/Model-Free Control/1522416612074.png)
+
+![52241663207](/assets/images/post_images/Model-Free Control/1522416632073.png)
+
+这个gridworld游戏展示了使用standard sarsa与sarsa($\lambda$)的区别。本例中只在最后一个step获得reward，如果使用one-step Sarsa，则TD error只会往前propagate一步使最后一步的Q值增大（体现在二图中仅一个箭头加深颜色）。如果使用Sarsa($\lambda$)，则会根据E table（eligibility trace）对所有state的action value均进行update。显然根据E的公式，早期的step由于不够recency因而Q值较小，所以箭头颜色较浅。
+
+# Off-Policy Learning
+
+![52241830636](/assets/images/post_images/Model-Free Control/1522418306363.png)
+
+## Importance Sampling
+
+![52246360857](/assets/images/post_images/Model-Free Control/1522463608573.png)
+
+![52246372376](/assets/images/post_images/Model-Free Control/1522463723761.png)
+
+## Q-Learning
+
+![52246383474](/assets/images/post_images/Model-Free Control/1522463834742.png)
+
+> behaviour policy与 update Q值的target policy不同。
+
+![52246398520](/assets/images/post_images/Model-Free Control/1522463985200.png)
+
+![52246400742](/assets/images/post_images/Model-Free Control/1522464007425.png)
+
+这里的$Q(S\prime， a\prime)$计算用到了bellman optimality Equation
+
+![52246422706](/assets/images/post_images/Model-Free Control/1522464227060.png)
+
+![52246461697](/assets/images/post_images/Model-Free Control/1522464616978.png)
+
+![52246463661](/assets/images/post_images/Model-Free Control/1522464636613.png)
+
+我在阅读[Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/abs/1509.06461)一文时，了解到Q-leanring 或者DQN算法，由于使用了在对q_target 取了max，会带来bias。而且反复的取max会导致overestimating，并且无法恢复。
+
