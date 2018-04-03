@@ -129,3 +129,44 @@ demo
 下图是使用linear TD(0) 计算critic的算法。
 
 ![52258941035](/assets/images/post_images/Policy Gradient Methods/1522589410351.png)
+
+> 过去的value based method的做法中，没有gradient ascend来提高policy的objective function值的这一步，而是使用$\epsilon-greddy$来进行policy improvment，这里的policy是implicit的。
+>
+> actor-critc中，由$\theta$进行衡量的policy $\pi_{\theta}$则是explicit的。在对$\theta$进行gradient ascend时，learning rate或者说是study step $\alpha$ 决定了policy 的变化速率。特别的，当$\alpha$ 趋近于$+\infin$时，这里的policy improvment就达到了greedy的效果。
+>
+> 另外，以上方法容易陷入local optima。
+
+## Advantage Function Critic
+
+![52267781009](/assets/images/post_images/Policy Gradient Methods/1522677810099.png)
+
+> policy gradient $\triangledown_{\theta} J(\theta)$ 减去baseline function 可以 reduce variance without change expectation
+
+上图第一个式子成立的前提是baseline function只是关于state而不关于action。
+
+特别的，这里的baseline选取为state value function效果很好，并且定义advantage function = action value function - state value function。
+
+> dual dqn 里面也提到了adavantage的概念。将action value funciton拆成了两个term。
+
+![52267887189](/assets/images/post_images/Policy Gradient Methods/1522678871891.png)
+
+这里计算advantage function的方法有两种，最容易想到的一种是使用两套parameters同时estimate V和Q，但这样显得即为complex。可以采用TD error ($\delta^{\pi_{\theta}}$)来作为sampe of advantage function。
+
+![1522759220941](/assets/images/post_images/Policy Gradient Methods/1522759220941.png)
+
+> TD error is an unbias sample of advantage function
+>
+> 使用TD error来estimate的方法可以只计算State value function V而不用计算action value function Q。
+
+## Eligibility Traces
+
+![1522761067296](/assets/images/post_images/Policy Gradient Methods/1522761067296.png)
+
+![1522761080954](/assets/images/post_images/Policy Gradient Methods/1522761080954.png)
+
+注意上图中policy gradient与不减去**baseline** function的区别！！！（最终值不变，但variance会减小）
+
+后两个公式中的$V_v(s_{t})$是baseline function，左边用红字描述的是$Q^{\pi_\theta}(s,a)$ 的估计值，分别用**complete return**和 **one-step TD target** 来估计。
+
+![1522762348635](/assets/images/post_images/Policy Gradient Methods/1522762348635.png)
+
