@@ -35,7 +35,7 @@ typora-root-url: ..
 
 因此我们需要引入概率图模型(A probabilistic graphical model of decision making )来解释人类的行为。
 
-# A probabilistic graphical model of decision making 
+# Inference with A probabilistic graphical model of decision making 
 
 ## probabilistic graphical model
 
@@ -65,6 +65,8 @@ $$
 
 ## Backward messages 
 
+### computation
+
 指当前状态当前动作下，未来的Optimality都为1的概率。计算过程如下：
 
 ![1526628809975](/assets/images/post_images/Connections Between Inference and Control/1526628809975.png)
@@ -82,6 +84,8 @@ $$
 
 
 
+### connection with value iteration
+
 ![1526643212644](/assets/images/post_images/Connections Between Inference and Control/1526643212644.png)
 
 这里对V和Q重新定义，得到V,Q之间的关系。并且，当Q越来越大，得到V等于Q，这也被称为一种softmax（不是DL里面的），指softening of the max operator。然而
@@ -96,9 +100,58 @@ $$
 
 但是这里先去exponential再取log的做法会带来过于乐观（optimistic transition）的问题。但是deterministic transition下这不是问题，但是在stochastic transition下会带来严重的问题。
 
-Summary如下图：
+### Summary
+
+如下图：
 
 ![1526646521270](/assets/images/post_images/Connections Between Inference and Control/1526646521270.png)
 
 从$$\beta_T$$开始递归到$$\beta_1$$来计算backward message。并且$$\beta_t$$ is "Q-function-like"。
+
+当action prior不为uniform distribution时，如下图：
+
+![1526647759608](/assets/images/post_images/Connections Between Inference and Control/1526647759608.png)
+
+## Policy computation 
+
+计算policy，使用贝叶斯公式可以得到下图中的公式：
+
+![1526648056249](/assets/images/post_images/Connections Between Inference and Control/1526648056249.png)
+
+### policy computer with value functions
+
+![1526648210420](/assets/images/post_images/Connections Between Inference and Control/1526648210420.png)
+
+使用backward message 计算 value function，其中policy的值是exponential of advantage function, 这个结果是很符合直觉的。如果某一个action对应的advantage较大，则其在policy中的取值概率也应该较大。
+
+### Summary
+
+![1526648684081](/assets/images/post_images/Connections Between Inference and Control/1526648684081.png)
+
+* Natural interpretation: better actions are more probable 
+* Random tie-breaking
+* Analogous to Boltzmann exploration 
+* Approaches greedy policy as temperature decreases 
+
+## Forward messages
+
+> 与下一讲的Inverse Reinforcement Learning右较强的联系
+
+### derivation
+
+### ![1526649774382](/assets/images/post_images/Connections Between Inference and Control/1526649774382.png)
+
+### Forward/backward message intersection 
+
+![1526650367425](/assets/images/post_images/Connections Between Inference and Control/1526650367425.png)
+
+## Summay
+
+1.  Probabilistic graphical model for optimal control 
+
+   ![1526650616049](/assets/images/post_images/Connections Between Inference and Control/1526650616049.png)
+
+2. . Control = inference (similar to HMM, EKF, etc.) 
+
+3. Very similar to dynamic programming, value iteration, etc. (but “soft”) 
 
