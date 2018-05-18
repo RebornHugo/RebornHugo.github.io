@@ -48,6 +48,7 @@ typora-root-url: ..
 * Provides an explanation for why stochastic behavior might be preferred (useful for exploration and transfer learning) 
 
 上图中：
+
 $$
 \mathcal{O_t}是新定义的optimality变量，是可以被观测的。仅有1和0两种取值。含义是在s_t与a_t的条件下，人是否想要获得奖励。
 $$
@@ -60,8 +61,44 @@ $$
 $$
 p(\mathcal{O_t}|s_t,a_t)\propto exp(r(s_t, a_t))
 $$
-后面会对其解释。这里有三点很重要：**backward message, policy, forward message**。
+上上张ppt有推导过程。这里有三点很重要：**backward message, policy, forward message**。
 
 ## Backward messages 
 
-指当前状态当前动作下，未来的Optimality都为1的概率。
+指当前状态当前动作下，未来的Optimality都为1的概率。计算过程如下：
+
+![1526628809975](/assets/images/post_images/Connections Between Inference and Control/1526628809975.png)
+
+注意这里两点：
+
+1. $$
+   \beta_T(s_T,a_t)=p(\mathcal{O}_{T}|s_T,a_T)
+   $$
+
+2. $$
+   p(\mathcal{a}_{t+1}|s_{t+1})被称为priori，因为它不取决于optimality。可以设定为uniform distribution。
+   $$
+
+
+
+
+![1526643212644](/assets/images/post_images/Connections Between Inference and Control/1526643212644.png)
+
+这里对V和Q重新定义，得到V,Q之间的关系。并且，当Q越来越大，得到V等于Q，这也被称为一种softmax（不是DL里面的），指softening of the max operator。然而
+$$
+V_t(s_t)->max_aQ_t(s_t,a_t)
+$$
+这种形式很容易让人联想到value iteration。
+
+![1526646140282](/assets/images/post_images/Connections Between Inference and Control/1526646140282.png)
+
+参见[RL_3](https://rebornhugo.github.io/reinforcement%20learning/2018/03/04/Planning-by-Dynamic-Programming/#value-iteration)。
+
+但是这里先去exponential再取log的做法会带来过于乐观（optimistic transition）的问题。但是deterministic transition下这不是问题，但是在stochastic transition下会带来严重的问题。
+
+Summary如下图：
+
+![1526646521270](/assets/images/post_images/Connections Between Inference and Control/1526646521270.png)
+
+从$$\beta_T$$开始递归到$$\beta_1$$来计算backward message。并且$$\beta_t$$ is "Q-function-like"。
+
