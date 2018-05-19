@@ -200,3 +200,39 @@ $$
 * Better robustness (due to wider coverage of states) 
 * Can reduce to hard optimality as reward magnitude increases 
 * Good model for modeling human behavior (more on this later inverse reinforcement learnig) 
+
+# Practical
+
+## Stochastic models for learning control 
+
+人们发现，使用同一套policy gradient算法和略微不同的超参设置来让MuJoCo小人奔跑，小人学会了全然不同的奔跑方式。虽然二者学会的方式都有较高的reward，但是这说明agent在学习时如果在exploration上有一点区别，将会导致较大的学习结果。较为直观的解释是：RL算法一旦发现了一块有较高reward的region，将会reinforce这块region，会较快陷入local optimal。
+
+![1526733562292](/assets/images/post_images/Connections Between Inference and Control/1526733562292.png)
+
+可以使用soft optimality方法来进行exploration。
+
+![1526733778816](/assets/images/post_images/Connections Between Inference and Control/1526733778816.png)
+
+首先回忆conventional Q-learning中exploration的方式是通过$$\epsilon$$-greedy进行的。但我们也可以使用soft方式进行。选取action的策略概率正比于advantage function的exponential。
+
+## Tractable ?
+
+那么soft optimality在实做上该怎么进行？因为Q-function会十分复杂，带来的问题是很难从$$\pi$$中sample新的data。
+
+以下是Soft Q-learning的过程：
+
+![1526734379590](/assets/images/post_images/Connections Between Inference and Control/1526734379590.png)
+
+从$$\pi$$中做sample方法，以下是一种思路：
+
+![1526734684953](/assets/images/post_images/Connections Between Inference and Control/1526734684953.png)
+
+添加一个stochastic network(类似imitation learnig中的implicit density model)进行sample，输入是state，输出时action，actoin要求与Q正相关。这个思路类似于GAN，Q-network好比是discriminator，Stochastic network好比是generator。来自这篇paper [《Learning to Draw Samples: With Application to Amortized MLE for Generative Adversarial Learning》](https://arxiv.org/abs/1611.01722)。
+
+那么这个方法有什么好处呢？下面是一个quadruped random walk，然后迁移到specific task（run down a hallway）的例子。
+
+在under specified reward function (for example下图中的quadruped超任意方向运动都有reward，不care方向指care速度) 中，standard reinforcement learning algorithm(比如DDPG)会随意选取一个方向来break a tie (好比quadruped会选取一个方向运动)。但是由于entropy maximization in the controller inference framework, 所以任何soft optimality algorithm 无论是Q learning 还是 policy gradient都会maximize the randomness of the behavior。
+
+![1526735825995](/assets/images/post_images/Connections Between Inference and Control/1526735825995.png)
+
+将spider-like quadruped做pretrained并迁移到一个run down a hallway的环境下，由于maximum entropy policies 的原因，在epoch100和200时，MAXENT init的quadruped相较于DDPG和random的quadruped要走的远。
