@@ -1,5 +1,5 @@
 ---
-title: RL-9  Connections Between Inference and Control
+titQ-learning with soft optimalityle: RL-9  Connections Between Inference and Control
 categories:
  - Reinforcement Learning
 tag:
@@ -84,6 +84,7 @@ $$
 
 
 
+
 ### connection with value iteration
 
 ![1526643212644](/assets/images/post_images/Connections Between Inference and Control/1526643212644.png)
@@ -145,7 +146,7 @@ $$
 
 ![1526650367425](/assets/images/post_images/Connections Between Inference and Control/1526650367425.png)
 
-## Summay
+## Summay	
 
 1.  Probabilistic graphical model for optimal control 
 
@@ -155,3 +156,47 @@ $$
 
 3. Very similar to dynamic programming, value iteration, etc. (but “soft”) 
 
+# Algorithm with Soft Optimality
+
+## Q-learning with soft optimality 
+
+使用softening max 代替 normal max来求下一个state下的max value function。
+
+并且计算policy的方式变为对advantage funtion取exponential。
+
+![1526717351798](/assets/images/post_images/Connections Between Inference and Control/1526717351798.png)
+
+## Policy gradient with soft optimality 
+
+$$
+\pi(a|s)=exp(Q_\phi(s,a)-V(s))
+$$
+
+optimizes
+$$
+\sum_tE_{\pi(s_t,a_t)}[r(s_t,a_t)]+E_{\pi(s_t)}[\mathcal{H}(\pi(a_t|s_t))]
+$$
+即使用policy gradient with soft optimality所要提升的目标除了expected future total reward之外，还有一项policy entropy作为正则项。其意义是防止policy提早崩塌为deterministic policy。
+
+![1526719788682](/assets/images/post_images/Connections Between Inference and Control/1526719788682.png)
+
+参见两篇paper
+
+[Equivalence Between Policy Gradients and Soft Q-Learning](https://arxiv.org/abs/1704.06440) 
+
+[Bridging the Gap Between Value and Policy Based Reinforcement Learning](https://arxiv.org/abs/1702.08892)
+
+说明policy gradient with soft optimality 与Q learning with soft optimality之间联系十分紧密，以下是推导过程： 
+
+![1526721615691](/assets/images/post_images/Connections Between Inference and Control/1526721615691.png)
+
+可以发现，policy gradient的计算形式与Q-learning是即为相似的，前者是gradient ascent所以是加一个(正)值，后者是gradient descent所以是减去一个(负)值。
+
+## Benefits of soft optimality 
+
+* Improve exploration and prevent entropy collapse 
+* Easier to specialize (finetune) policies for more specific tasks 
+* Principled approach to break ties 
+* Better robustness (due to wider coverage of states) 
+* Can reduce to hard optimality as reward magnitude increases 
+* Good model for modeling human behavior (more on this later inverse reinforcement learnig) 
