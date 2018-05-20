@@ -1,5 +1,5 @@
 ---
-titQ-learning with soft optimalityle: RL-9  Connections Between Inference and Control
+title: RL-9  Connections Between Inference and Control
 categories:
  - Reinforcement Learning
 tag:
@@ -80,6 +80,7 @@ $$
 2. $$
    p(\mathcal{a}_{t+1}|s_{t+1})被称为priori，因为它不取决于optimality。可以设定为uniform distribution。
    $$
+
 
 
 
