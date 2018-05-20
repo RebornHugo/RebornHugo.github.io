@@ -75,7 +75,9 @@ Challenges:
 
   ![1526816213198](/assets/images/post_images/Inverse Reinforcement Learning/1526816213198.png)
 
-  > 缺少先验知识，无法解释circle问什么会朝着右边的triangle移动。**Ambiguity**！Many Ambiguous Answer
+  > 缺少先验知识，无法解释circle为什么会朝着右边的triangle移动。
+  >
+  > **Ambiguity**  -> Many Ambiguous Answer！
 
 * difficult to evaluate a learned reward
 
@@ -102,3 +104,12 @@ $$
 带来的问题是最终的margin就会为0。于是有
 
 ![1526819094184](/assets/images/post_images/Inverse Reinforcement Learning/1526819094184.png)
+
+## Optimal Control as a Model of Human Behavior 
+
+使用[上节课](https://rebornhugo.github.io/reinforcement%20learning/2018/05/17/Connections-Between-Inference-and-Control/)中学习的概率图模型而不是直接求解最大的expected future cumulative discounted reward。
+
+A probabilistic graphical model of decision making 
+
+![1526822436140](/assets/images/post_images/Inverse Reinforcement Learning/1526822436140.png)
+
