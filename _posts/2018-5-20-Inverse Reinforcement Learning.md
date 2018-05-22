@@ -109,7 +109,92 @@ $$
 
 使用[上节课](https://rebornhugo.github.io/reinforcement%20learning/2018/05/17/Connections-Between-Inference-and-Control/)中学习的概率图模型而不是直接求解最大的expected future cumulative discounted reward。
 
-A probabilistic graphical model of decision making 
+回忆A probabilistic graphical model of decision making 
 
 ![1526822436140](/assets/images/post_images/Inverse Reinforcement Learning/1526822436140.png)
+
+于是我们可以使用概率图模型与极大似然法学出
+$$
+\psi
+$$
+![1526978517844](/assets/images/post_images/Inverse Reinforcement Learning/1526978517844.png)
+
+显然这里的关键在于partition function。
+
+![1526978795295](/assets/images/post_images/Inverse Reinforcement Learning/1526978795295.png)
+
+所以我们的objective function 变成了从专家策略sample出来的奖励梯度的期望减去从概率图模型sample出来的奖励梯度的期望。显然前一项是很silly的直接sample就行，但是后一项需要计算概率图里的前向信息/后向信息。
+
+![1526979606305](/assets/images/post_images/Inverse Reinforcement Learning/1526979606305.png)
+
+![1526979845467](/assets/images/post_images/Inverse Reinforcement Learning/1526979845467.png)
+
+这个解法在state action离散并且数量较小情况(tabular form)下，是可以做的，计算出前向信息后向信息并存在表中。 上述方法即为MaxEnt IRL algorithm。
+
+## MaxEnt IRL algorithm
+
+tabular form：
+
+![1526980921593](/assets/images/post_images/Inverse Reinforcement Learning/1526980921593.png)
+
+上述的循环即为算法流程，关于前/后向信息的计算流程，参见[上讲](https://rebornhugo.github.io/reinforcement%20learning/2018/05/17/Connections-Between-Inference-and-Control/#probabilistic-graphical-model)
+
+那么这里为什么叫做MaxEnt IRL呢？因为这个算法实质上也在做：
+
+在reward function是feature的linear combination时，用MaxEnt得到的结果正好是问题:
+
+> maximizing the entropy of the policy subject to the constraint that the feature expectations are equal between the learnt policy（如上图）
+
+* case study1:
+
+  **MaxEnt IRL for road navigation** (tabular)
+
+  [MaxEnt IRL with hand-designed features for learning to navigate in urban environments based on taxi cab GPS data.](http://repository.cmu.edu/cgi/viewcontent.cgi?article=1045&context=robotics) 
+
+  > 使用线性代价函数，手工定制了路的类型（高速、主道、辅道）、速度、车道、转向等特征。这说明在实际问题中这种表格形式也是有一定可行性的。 
+
+* case study2:
+
+  **MaxEnt IRL with known dynamics (tabular setting), neural net cost** 
+
+  [Watch This: Scalable Cost-Function Learning for Path Planning in Urban Environments](https://arxiv.org/abs/1607.02329)
+
+  使用CNN结构以feature(pixel)作为输入，得到reward。
+
+# Deep Inverse Reinforcement Learning
+
+## What about larger RL problems? 
+
+* MaxEnt IRL: probabilistic framework for learning reward functions 
+
+* Computing gradient requires enumerating state-action visitations for all states and actions 
+
+  * Only really viable(可行的) for small, discrete state and action spaces 
+
+  * Amounts to a dynamic programming algorithm (exact forward/backward inference) 
+
+    > 回忆上一讲中，backward message与value iteration的计算关系
+
+* For deep IRL, we want two things: 
+
+  * Large and continuous state and action spaces 
+  * Effective learning under unknown dynamics 
+
+## Unknown dynamics & large state/action spaces 
+
+Assume we don’t know the dynamics, but we can sample, like in standard RL.如下图：
+
+![1526995183391](/assets/images/post_images/Inverse Reinforcement Learning/1526995183391.png)
+
+就是说可以使用max-ent RL算法(回忆[上一讲](https://rebornhugo.github.io/reinforcement%20learning/2018/05/17/Connections-Between-Inference-and-Control/#policy-gradient-with-soft-optimality)中的maximum entropy policies)，但是这样做需要learn一个RL问题的policy，需要大量sample，极其耗时。
+
+## More efficient sample-based updates
+
+于是，我们可以简化learn的过程，不用learn到收敛，而是用improve过程取而代之，并且近似估计出梯度值。但这样做也会带来估计值有偏差的问题，可以使用[importance sampling](file:///D:/BaiduYunDownload/lecture_12_irl.pdf)解决。
+
+![1526996821693](/assets/images/post_images/Inverse Reinforcement Learning/1526996821693.png)
+
+
+
+
 
