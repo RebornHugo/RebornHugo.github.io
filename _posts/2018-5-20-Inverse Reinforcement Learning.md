@@ -194,7 +194,29 @@ Assume we don’t know the dynamics, but we can sample, like in standard RL.如�
 
 ![1526996821693](/assets/images/post_images/Inverse Reinforcement Learning/1526996821693.png)
 
+关于weight值的计算如下：
 
+![1527044824082](/assets/images/post_images/Inverse Reinforcement Learning/1527044824082.png)
 
+## CASE STUDY
 
+[Guided Cost Learning: Deep Inverse Optimal Control via Policy Optimization](http://proceedings.mlr.press/v48/finn16.pdf) 
+
+这里的cost function实际上就是负的reward function。
+
+![1527064308350](/assets/images/post_images/Inverse Reinforcement Learning/1527064308350.png)
+
+随机初始化policy $$\pi$$，从该策略中sample出样本，然后利用人类示范的样本做importance sampling并且更新reward function，反复迭代，最终可以得到一个合适的reward function以及policy。
+
+# Connection to Generative Adversarial Networks 
+
+首先回忆[gan](https://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf)，下图是截自Ian Goodfellow原始paper：
+
+![1527077042149](/assets/images/post_images/Inverse Reinforcement Learning/1527077042149.png)
+
+实际上GAN与IRL有着极其相似的性质，假设trajectory在expert/data下的概率为$$p(\tau)$$, 在policy/generator下的概率$$q(\tau)$$, 
+
+![1527078682876](/assets/images/post_images/Inverse Reinforcement Learning/1527078682876.png)
+
+如果将
 
