@@ -210,13 +210,34 @@ Assume we don’t know the dynamics, but we can sample, like in standard RL.如�
 
 # Connection to Generative Adversarial Networks 
 
+## review GAN
+
 首先回忆[gan](https://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf)，下图是截自Ian Goodfellow原始paper：
 
 ![1527077042149](/assets/images/post_images/Inverse Reinforcement Learning/1527077042149.png)
+
+## Connective with IRL and entropy-regularized RL
 
 实际上GAN与IRL有着极其相似的性质，假设trajectory在expert/data下的概率为$$p(\tau)$$, 在policy/generator下的概率$$q(\tau)$$, 
 
 ![1527078682876](/assets/images/post_images/Inverse Reinforcement Learning/1527078682876.png)
 
-如果将
+>  如果将$$D_\psi$$带入判别器的loss中，结果正好是IRL的objectiv function。
 
+![1527086949892](/assets/images/post_images/Inverse Reinforcement Learning/1527086949892.png)
+
+> 如果将$$D_\psi$$带入生成器的loss中，结果正好是上一讲中学到的entropy-regularized RL
+
+## Generative Adversarial Imitation Learning 
+
+有一个直观的想法，可不可以直接使用discriminator来做分类器而不去使用繁复的reward function呢？可以直接将expert demos认为True，policy samples认为是False，Paper 《[Generative Adversarial Imitation Learning](https://arxiv.org/abs/1606.03476)》中做了这个工作。
+
+![1527088623821](/assets/images/post_images/Inverse Reinforcement Learning/1527088623821.png)
+
+实际上，可以把
+$$
+logD(\tau)
+$$
+视为implicit reward，并可以使用这个reward得到policy。
+
+最后顺便一提：IRL = generative adversarial networks = energy-based models。
