@@ -105,6 +105,8 @@ $$
 
 ![1527664237867](/assets/images/post_images/Exploration/1527664237867.png)
 
+> 注意这里的regret并不是在exploration strategy的所有地方都会用到的，regret只是一种用来估量一个strategy的效果quantity。实做上这些算法并没有怎么用到regret，不需要计算regret。
+
 * Variety of relatively simple strategies(后面会介绍三种)
 * Often can provide theoretical guarantees on regret
   * Variety of optimal algorithms (up to a constant factor)
@@ -158,3 +160,38 @@ General themes
   * Assume unknown = good (optimism)
   * Assume sample = truth
   * Assume information gain = good 
+* 接下来将要把foundation derived from bandits apply to more complex MDP
+
+# Exploration in Deep RL
+
+## Classes of exploration methods in deep RL 
+
+* **Optimistic** exploration:
+  * new state = good state 
+  * requires estimating **state visitation frequencies** or **novelty**  (count based)
+  * typically realized by means of **exploration bonuses** 
+* Thompson sampling style algorithms
+  * learn distribution over Q-functions or policies 
+  * **sample** and act according to sample 
+* Information gain style algorithms 
+  * reason about **information gain** from visiting new states
+
+## Optimistic exploration in RL 
+
+### Optimistic exploration in RL 
+
+optimistic exploration很容易推广到deep RL，只需要修改reward为reward+bonus，其中bonus需要随之访问该state(或者state action pair)次数增加而减少。这里的bonus是count based。
+
+![1527685263894](/assets/images/post_images/Exploration/1527685263894.png)
+
+### The trouble with counts 
+
+在蒙特祖玛的复仇游戏中，如果把图片帧当做state，那么由于游戏中的单位在变化，很难找到两个相同的state，所以难以做count。在continuous的情况下，比如拿锤子敲钉子情况会更加dire。解决方法是很符合intuition的：一些state/frame在pixel上不对应，却有着极为相似的性质，可以把它们count起来。
+
+![1527685866683](/assets/images/post_images/Exploration/1527685866683.png)
+
+### Fitting generative models(pseudo count) 
+
+![1527686285553](/assets/images/post_images/Exploration/1527686285553.png)
+
+![1527686631640](/assets/images/post_images/Exploration/1527686631640.png)
