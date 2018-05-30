@@ -3,7 +3,8 @@ title: RL-11  Exploration
 categories:
  - Reinforcement Learning
 tag:
- - RL,DRL
+ - RL
+ - DRL
 
 typora-copy-images-to: ..\assets\images\post_images\Exploration
 typora-root-url: ..
@@ -82,7 +83,7 @@ Temporally extended tasks like Montezuma’s revenge become increasingly difficu
 
 以上指出了哪些exploration问题是理论上可解，我们将从multi-armed bandits出发推广到theoretical intractable的情况，并使用heuristic的方法来解。
 
-# Solution
+# Solution within small MDP/Bandits
 
 ## What makes an exploration problem tractable
 
@@ -90,6 +91,70 @@ Temporally extended tasks like Montezuma’s revenge become increasingly difficu
 
 ## Bandits
 
-这里的bandits不是强盗土匪，而是美国俚语里的老虎机。它是强化学习exploration问题中的drosophila(果蝇)，one-arm bandits 中摇臂机只有一个臂，状态空间为零，动作空间只有一个(摇臂)，并获得一个reward (满足$$r(a)\sim p(r|a)$$)。one-arm bandits没什么意思，我们要考虑的是multi-arm bandits。注意每个arm的reward都是stochastic。
+这里的bandits不是强盗土匪，而是美国俚语里的老虎机。它是强化学习exploration问题中的drosophila(果蝇)，one-arm bandits 中摇臂机只有一个臂，状态空间为零，动作空间只有一个(摇臂)，并获得一个reward (满足
+$$
+r(a)\sim p(r|a)
+$$
+)。one-arm bandits没什么意思，我们要考虑的是multi-arm bandits。注意每个arm的reward都是stochastic。
 
 ![1527662613511](/assets/images/post_images/Exploration/1527662613511.png)
+
+这个[网站](http://iosband.github.io/2015/07/28/Beat-the-bandit.html)提供了类似于multi-arm bandits的prescription游戏，并且给出了几种exporation方法的结果对比。
+
+## Mathematical definition about bandits
+
+![1527664237867](/assets/images/post_images/Exploration/1527664237867.png)
+
+* Variety of relatively simple strategies(后面会介绍三种)
+* Often can provide theoretical guarantees on regret
+  * Variety of optimal algorithms (up to a constant factor)
+  * But empirical performance may vary(不同exploration strategy实做上效果不同)… 
+* Exploration strategies for more complex MDP(**DRL**) domains will be inspired by these strategies 
+
+## Optimistic exploration
+
+* Intuition: 没有探索的地方很可能会有好的回报，于是可以对没有exploration的action optimistic，在具体实现上可以加上一个uncertainty term。
+
+  ![1527665366097](/assets/images/post_images/Exploration/1527665366097.png)
+
+  > 比如上图中的UCB(upper confidence bound algorithm)
+
+## Probability matching/posterior sampling 
+
+这里要先回忆definition of bandits中提到的belief state，可以把它理解为bandit的model的distribution。也就是说
+$$
+\hat{p}(\theta_1, ...,\theta_n)
+$$
+可以理解为bandit这个model的参数为
+$$
+\theta_1,...,\theta_n
+$$
+的概率为$\hat{p}$。posterior sampling的过程如下：
+
+![1527666474020](/assets/images/post_images/Exploration/1527666474020.png)
+
+sample $\theta$比sample random action更有意义。参考[<<An Empirical Evaluation of Thompson Sampling>>](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/thompson.pdf)
+
+## Information gain 
+
+information gain的作用是quantify从一个action中获取的信息
+
+![1527667118711](/assets/images/post_images/Exploration/1527667118711.png)
+
+> 关于这里的entropy，像semi-supervised leanring里面entropy-based方法，附上[ppt链接](http://speech.ee.ntu.edu.tw/~tlkagk/courses/ML_2017/Lecture/semi.pdf)。
+
+下面是一个例子，来自paper [<<Learning to Optimize via Information-Directed Sampling](https://arxiv.org/abs/1403.5556)>>
+
+![1527667727961](/assets/images/post_images/Exploration/1527667727961.png)
+
+## Summarize
+
+General themes
+
+![1527667930562](/assets/images/post_images/Exploration/1527667930562.png)
+
+* Most exploration strategies require some kind of uncertainty estimation (even if it’s naïve) 
+* Usually **assumes** some value to new information
+  * Assume unknown = good (optimism)
+  * Assume sample = truth
+  * Assume information gain = good 
