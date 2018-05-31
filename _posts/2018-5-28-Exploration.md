@@ -195,3 +195,64 @@ optimistic exploration很容易推广到deep RL，只需要修改reward为reward
 ![1527686285553](/assets/images/post_images/Exploration/1527686285553.png)
 
 ![1527686631640](/assets/images/post_images/Exploration/1527686631640.png)
+
+可以参考paper[<<Unifying Count-Based Exploration and Intrinsic Motivation](https://arxiv.org/abs/1606.01868)
+
+ >>
+
+### What kind of bonus to use? 
+
+Lots of functions in the literature, inspired by optimal methods for bandits or small MDPs, 所以这些方法推广到DRL上时会难以证明一些性质。以下是一些常用的bonus function
+
+![1527749794415](/assets/images/post_images/Exploration/1527749794415.png)
+
+### What kind of model to use?
+
+* density model/ generative model，也就是这里的$p_\theta(s)$，需要输出density的值，但是不一定非要产生samples。
+
+* 和流行生成模型不同(eg. GAN, VAE)
+
+* 上述paper中采用了名为CTS的模型：
+
+   ![1527752226452](/assets/images/post_images/Exploration/1527752226452.png)
+
+  详细可以参考paper。
+
+### Counting with hashes 
+
+* What if we still count states, but in a different space? 
+
+* 也就是说，可以对image进行降维，哈希碰撞后相同编码的image理解为同一个state
+
+  ![1527752628497](/assets/images/post_images/Exploration/1527752628497.png)
+
+  > 对降维后的编码值维护一个tabel，表示count值。
+  >
+  > 参考paper[<<Exploration: A Study of Count-Based Exploration for Deep Reinforcement Learning>>](https://arxiv.org/abs/1611.04717)
+
+### Implicit density modeling with exemplar models 
+
+这套方法Exploit以下这条性质：
+
+>  $p_\theta(s)$ 需要只需要能输出densities，不必非要产生samples
+
+Can we explicitly compare the new state to past states? 
+
+* Intuition：the state is **novel** if it is **easy** to distinguish from all previous seen states by a classifier
+
+![1527757702627](/assets/images/post_images/Exploration/1527757702627.png)
+
+以上的公式非常weird，特别是$D_s(s)$，下标s代表是用s作为训练集(还有$\mathcal{D}$)train出来的分类器，括号内的s代表这个classifier assigns to s of being in its own set( 当前输入是s)。这个classifier在试图解决一个非常weird的问题
+
+> Is $s = s$?
+
+下面是对这个问题的解释：
+
+如果有一个small MDP，其中只有两种状态$A,B$，并且至今已经经历了状态A 10次，状态B 9次，接下来的s为B，注意这里dataset D本身就包含了s(的拷贝)。所以这里的分类器在解决一个ambiguous problem，并且optimal $D_s(s)\neq1$。
+
+![1527767095715](/assets/images/post_images/Exploration/1527767095715.png)
+
+> 推广到连续空间或者图片作state时，不会有重复状态，因此需要**regularize**
+
+细节参考paper[<<EX2: Exploration with Exemplar Models for Deep Reinforcement Learning>>](https://arxiv.org/abs/1703.01260)
+
