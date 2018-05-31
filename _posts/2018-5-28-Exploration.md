@@ -256,3 +256,14 @@ Can we explicitly compare the new state to past states?
 
 细节参考paper[<<EX2: Exploration with Exemplar Models for Deep Reinforcement Learning>>](https://arxiv.org/abs/1703.01260)
 
+## Posterior sampling in deep RL 
+
+首先回忆Thompson sampling，并考虑思考如何推广到DRL情况：
+
+![1527771836779](/assets/images/post_images/Exploration/1527771836779.png)
+
+如何表示所有Q函数的分布呢？(这里的$p(Q)$)
+
+### Bootstrap
+
+bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一种。
