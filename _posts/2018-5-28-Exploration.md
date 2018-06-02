@@ -266,4 +266,23 @@ Can we explicitly compare the new state to past states?
 
 ### Bootstrap
 
-bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一种。
+bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一种。核心思想是从dataset里面做resemble，以获得多个不同的nn，也就是这里的Q函数。
+
+![1527943606915](/assets/images/post_images/Exploration/1527943606915.png)
+
+这里有两个trick：
+
+> 1. 实做上可以不做resample，而是用random seed做多个nn的参数初始化，因为神经网络不是convex optimization problem，如果用SGD来解，那么它则是一个stochastic optimization problem。因此对不同的$Q_i$做不同的initialization，作用在同样的dataset上，得到的model之间仍然会有很大的variability。
+> 2. train多个nn代价昂贵，可以共享前面的卷积层参数。
+
+关于posterior sampling以及bootstrap方法的合理性，以游戏为例，如果采用随机动作来进行探索，那么效果会很差，因为可能会采取一些毫无意义的策略，比如向前走再向后走(**oscillate back and forth**)，这样虽然会带来diversity，但是难以探索到真正有用的state。
+
+> **Cover the action space evenly with a near uniform distribution is not the same as covering the state space evenly**
+
+但是如果使用随机的Q函数做探索，不会像随机动作一样做愚蠢的事情(**internally consistent**)。
+
+以上便是著名的bootstrap DQN，参考paper[<<Deep Exploration via Bootstrapped DQN>>](https://arxiv.org/abs/1602.04621)
+
+![1527946217772](/assets/images/post_images/Exploration/1527946217772.png)
+
+这类方法的优点在于不需要像optimistic exploration一样添加bonus来修改reward function，所以实做上会更简单(less fuss)，但往往没有optimistic exploration的效果好，看上面第五个曲线图，bootstrap DQN在Montezuma's Revenge游戏上的仍然很差。
