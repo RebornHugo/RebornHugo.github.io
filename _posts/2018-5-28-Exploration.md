@@ -196,9 +196,8 @@ optimistic exploration很容易推广到deep RL，只需要修改reward为reward
 
 ![1527686631640](/assets/images/post_images/Exploration/1527686631640.png)
 
-可以参考paper[<<Unifying Count-Based Exploration and Intrinsic Motivation](https://arxiv.org/abs/1606.01868)
+可以参考paper[<<Unifying Count-Based Exploration and Intrinsic Motivation>>](https://arxiv.org/abs/1606.01868)
 
- >>
 
 ### What kind of bonus to use? 
 
@@ -234,7 +233,7 @@ Lots of functions in the literature, inspired by optimal methods for bandits or 
 
 这套方法Exploit以下这条性质：
 
->  $p_\theta(s)$ 需要只需要能输出densities，不必非要产生samples
+>  $p_\theta(s)$ 只需要能输出densities，不必非要产生samples
 
 Can we explicitly compare the new state to past states? 
 
@@ -275,7 +274,9 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 > 1. 实做上可以不做resample，而是用random seed做多个nn的参数初始化，因为神经网络不是convex optimization problem，如果用SGD来解，那么它则是一个stochastic optimization problem。因此对不同的$Q_i$做不同的initialization，作用在同样的dataset上，得到的model之间仍然会有很大的variability。
 > 2. train多个nn代价昂贵，可以共享前面的卷积层参数。
 
-关于posterior sampling以及bootstrap方法的合理性，以游戏为例，如果采用随机动作来进行探索，那么效果会很差，因为可能会采取一些毫无意义的策略，比如向前走再向后走(**oscillate back and forth**)，这样虽然会带来diversity，但是难以探索到真正有用的state。
+### Why does this work 
+
+关于posterior sampling以及bootstrap方法的合理性：以游戏为例，如果采用随机动作来进行探索，那么效果会很差，因为可能会采取一些毫无意义的策略，比如向前走再向后走(**oscillate back and forth**)，这样虽然会带来diversity，但是难以探索到真正有用的state。
 
 > **Cover the action space evenly with a near uniform distribution is not the same as covering the state space evenly**
 
@@ -285,4 +286,72 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 
 ![1527946217772](/assets/images/post_images/Exploration/1527946217772.png)
 
-这类方法的优点在于不需要像optimistic exploration一样添加bonus来修改reward function，所以实做上会更简单(less fuss)，但往往没有optimistic exploration的效果好，看上面第五个曲线图，bootstrap DQN在Montezuma's Revenge游戏上的仍然很差。
+这类方法的优点在于不需要像optimistic exploration一样添加bonus来修改reward function，所以实做上会更简单(less fuss)，但往往没有optimistic exploration的效果好，看上面第五个曲线图，bootstrap DQN在Montezuma's Revenge游戏上的效果仍然很差。
+
+## Reasoning about Information gain(approximately)
+
+### information gain about *what*?
+
+回忆information gain: $IG(z,y|a)=E_y[\mathcal{H}(\hat{p}(z))-\mathcal{H}(\hat{p}(z)|y))|a]$
+
+第一个需要解决的问题是：**information gain about *what*?**
+
+以下是几种选择思路
+
+* information gain about reward function $r(s,a)$
+
+  > cons: not very useful if reward is sparse
+
+* state density $p(s)$
+
+  > peculiar, make sense: 玩蒙特祖玛的复仇时如果新开了一扇门，那么这个state的density会上升
+
+* dynamics $p(s\prime|s,a)$
+
+  > directly analogous to the bandit setting, $\theta$ in bandit 就是它的model, 而这里dynamics也是model
+  >
+  > > good proxy for *learning* the **MDP**, though still heuristic 
+
+### VIME
+
+但是以上的方法通常都是**intractable** to use exactly, regardless of what is being estimated!所以我们需要approximation。以下是几种approximation的思路
+
+* prediction gain: $log\mathcal{p_{\theta\prime}}(s)-log\mathcal{p_\theta}(s)$
+
+  > 可以把prediction gain当做bonus, 以上的p是count based method 里面的 **density** model
+
+* variational inference:  首先，当使用dynamics来作为$Z$(latent variable)时，IG等价于$D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))$
+
+  ![1528019715834](/assets/images/post_images/Exploration/1528019715834.png)
+
+  这套方法叫做VIME，参考[<<VIME: Variational Information Maximizing Exploration>>](https://arxiv.org/abs/1605.09674) Implementation如下： 
+
+  ![123](/assets/images/post_images/Exploration/123-1528031151310.PNG)
+
+> $p(h|\theta)$比$p(\theta|h)$容易获得
+>
+> 注意区分上面两个KL divergence。
+
+简单来说，就是使用独立的高斯分布作为dynamics nn的参数，仍然使用bp来update对应的参数$\phi$。
+
+使用最终的$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$ 作为bonus来进行exploration。
+
+![1528033223285](/assets/images/post_images/Exploration/1528033223285.png)
+
+实做上效果很好，橙色是VIME的效果。
+
+### Exploration with model errors 
+
+VIME中，$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$是用来更新网络中的$\phi$值，如果抛开information gain的思路，可以有更简单的方法来measure
+
+Stadie et al. 2015:
+
+* encode image observations using auto-encoder
+* build predictive model on auto-encoder latent states
+* use **model error**(判断下一state能否被model预测出来) as exploration bonus 
+
+Schmidhuber et al. (see, e.g. <<Formal Theory of Creativity, Fun, and Intrinsic Motivation>>)：
+
+* exploration bonus for model error
+* exploration bonus for model gradient
+* many other variations 
