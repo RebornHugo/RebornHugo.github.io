@@ -355,3 +355,5 @@ Schmidhuber et al. (see, e.g. <<Formal Theory of Creativity, Fun, and Intrinsic 
 * exploration bonus for model error
 * exploration bonus for model gradient
 * many other variations 
+
+> 注意上述方法都是用于获得bonus，便于修改reward function，所以有着count based method所拥有的downside。
