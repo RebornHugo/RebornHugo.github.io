@@ -70,5 +70,121 @@ in RL, $\textcolor{Red}{task} $=$\textcolor{BLUE}{MDP} $!
 * 1-shot: try the task once
 * few shot: try the task a few times 
 
+## How can we frame transfer learning problems? 
+
+1. “Forward” transfer: train on one task, transfer to a new task
+   * Just try it and hope for the best
+   * Architectures for transfer: progressive networks
+   *  Finetune on the new task
+   * Randomize source task domain
+2. Multi-task transfer: train on many tasks, transfer to a new task 
+   * Model-based reinforcement learning 
+   * Model distillation 
+   * Contextual policies 
+   * Modular policy networks 
+3. Multi-task meta-learning: learn to learn from many tasks 
+   * RNN-based meta-learning 
+   * Gradient-based meta-learning 
+
+# Try to Solve
+
+## Forward transfer method
+
+Policies trained for one set of circumstances might just work in a new domain, but no promises or guarantees. 这里省略机器人到拧盖子和倒水的两个例子，这种方法能否成功在于source domain与target domain的相似性。因此需要一些方法来stack the odds in favor
+
+### Finetuning
+
+The most popular transfer learning method in (supervised) deep learning! 
+
+![1528118561670](/assets/images/post_images/transfer learning/1528118561670.png)
+
+但是在RL与DL不同: **Where are the “ImageNet” features of RL?** 所以在RL中做finetune需要care更多的东西。
+
+Challenges with finetuning in RL:
+
+1. RL tasks are generally much less diverse 
+   * Features are **less general**
+   * Policies & value functions become **overly specialized** 
+2. Optimal policies in **fully observed MDPs** are **deterministic**
+   * Loss of exploration at convergence
+   * Low-entropy policies adapt very slowly to new settings
+
+### Finetuning with maximum-entropy policies 
+
+How can we increase diversity and entropy? 回忆之前学过的connection between inference and control中学到的Max-ENT policy，还有quadruped robot的例子。
+
+![1528119584067](/assets/images/post_images/transfer learning/1528119584067.png)
+
+Act **as randomly as possible** while collecting high rewards! 
+
+Example: pre-training for **robustness**
+
+![1528119783507](/assets/images/post_images/transfer learning/1528119783507.png)
+
+Example: [pre-training for **diversity**](https://rebornhugo.github.io/reinforcement%20learning/2018/05/17/Connections-Between-Inference-and-Control/#tractable-)
+
+![1526735825995](https://rebornhugo.github.io/assets/images/post_images/Connections%20Between%20Inference%20and%20Control/1526735825995.png) 
+
+Downside:
+
+1. worse in the source domain
+2. algorithm is more complex
+
+### Architectures for transfer: progressive networks 
+
+* An issue with finetuning
+  * Deep networks work best when they are **big**
+  * When we finetune, we typically want to use a little bit of experience
+  * Little bit of experience + big network = **overfitting**
+  * Can we somehow finetune a **small network**, but still pretrain a big network?
+* Idea 1: finetune just a few layers 
+  * Limited expressiveness(如果只finetune最后几层)
+  * Big error gradients can wipe out initialization(如果finetune全部，并有overfitting的可能)
+* Idea 2:add *new* layers for the new task(参考paper[<<Progressive Neural Networks>>](https://arxiv.org/abs/1606.04671))
+  * Freeze the old layers, so no forgetting(不会wipe out initialization)
+  * 由于有new architecture(smaller), 所以old conv layer不会wipe out information we need for new game
+
+| *finetuning最后几层*                                         | *添加新结构*                                                 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![1528163116841](/assets/images/post_images/transfer learning/1528163116841.png) | ![1528163177450](/assets/images/post_images/transfer learning/1528163177450.png) |
+
+**pros**: alleviates some issues with finetuning
+
+**cons**: not obvious how serious these issues are
+
+### Finetuning Summary
+
+* Try and hope for the best 
+  * Sometimes there is enough variability during training to generalize 
+* Finetuning 
+  * A few issues with finetuning in RL
+  * Maximum entropy training can help
+* Architectures for finetuning: progressive networks
+  * Addresses some overfitting and expressivity problems by construction 
+
+### Randomize source task domain
+
+What if we can manipulate the source domain? 
+
+* So far: source domain (e.g., empty room) and target domain (e.g., corridor) are fixed(或者前面的ant learnining how to run in empty room and transfer to hallway)
+* What if we can **design** the source domain, and we have a **difficult** target domain?
+  * Often the case for simulation to real world transfer
+* Same idea: the more diversity we see at training time, the better we will transfer! 
+
+###  EPOpt: randomizing physical parameters 
+
+下面的环境中，the discrepancy between the source and target consists of  physical parameter of the hopper.
+
+> Generally the conventional wisdom for example in robust control is if you train under greater variabilty you will get more robustness as the cost of task performance. The interesting thing about DRL is that in general that might still be the case, 但有些情况下这些robust的policy可以不牺牲performance，仍然足够robust. 比如上图中用ensemble train出来的policy在mass为3/6/9时的performance与直接用对应的mass train出来的相同
+
+![1528199498217](/assets/images/post_images/transfer learning/1528199498217.png)
+
+> the more you randomized the physical parameter during training the more like you are to succeed when a test time there's a new phycical phenomena that you did not vary.(**unmodeled effect**!!!)
+
+reference: paper[<<EPOpt: Learning Robust Neural Network Policies Using Model Ensembles>>](https://arxiv.org/abs/1610.01283)
 
 
+
+
+
+ 
