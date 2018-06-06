@@ -179,12 +179,84 @@ What if we can manipulate the source domain?
 
 ![1528199498217](/assets/images/post_images/transfer learning/1528199498217.png)
 
-> the more you randomized the physical parameter during training the more like you are to succeed when a test time there's a new phycical phenomena that you did not vary.(**unmodeled effect**!!!)
+> the more you randomized the physical parameter during training the more like you are to succeed when a test time there's a *new physical phenomena that you did not vary*.(**unmodeled effect**!!!)
 
 reference: paper[<<EPOpt: Learning Robust Neural Network Policies Using Model Ensembles>>](https://arxiv.org/abs/1610.01283)
 
+### Preparing for the unknown: explicit system ID 
 
+![1528265887466](/assets/images/post_images/transfer learning/1528265887466.png)
 
+> also vary physical parameter: 横坐标为offset of the center of the mass
 
+Reference: [<<Preparing for the Unknown: Learning a Universal Policy with Online System Identification>>](https://arxiv.org/abs/1702.02453)，该系统由两部分组成: a Universal Policy (UP) and a function for Online System Identification (OSI). 后者为一个RNN，输出环境中的参数(诸如friction/mass之类). UP-OSI系统在这个task中效果接近UP-true(正确的环境参数)的效果。
 
- 
+Reference:[<<Sim-to-Real Transfer of Robotic Control with Dynamics Randomization>>](https://arxiv.org/abs/1710.06537)，这篇paper结合和上述两种方法: randomizing physical parameters和使用recurrent Policy，但是没有explicitly attempt to predict parameter而是一个implicit system identification.
+
+Reference:[<<Sadeghi et al., “CAD2RL: Real Single-Image Flight without a Single Real Image” >>](https://arxiv.org/abs/1611.04201) Collision Avoidance via Deep Reinforcement Learning，在CAD模拟器中训练quadrotor(四旋翼飞行器)，并迁移到真实环境中。其中模拟的环境要求: less realistic simulator but one that is highly **randomized**. 这篇paper里观察到了: **enough diversity in the source domain can go a long way toward enabling transfer but you do have to make sure that you avoid sort of pathological regularity like the lack of reflections.**
+
+------
+
+前面几种方法是在无法观察target domain时所采取的但是, What if we can peek at the target domain? 
+
+* So far: pure 0-shot transfer: learn in source domain so that we can succeed in **unknown** target domain
+
+* Not possible in general: if we know nothing about the target domain, the best we can do is be as robust as possible
+
+* What if we saw a few images of the target domain?
+
+> 这个问题在传统RL中有很多研究，但是在DRL中这个问题fairly new
+
+###  Better transfer through domain adaptation
+
+Refrence: [<<Adapting Deep Visuomotor Representations with Weak Pairwise Constraints>>](https://arxiv.org/abs/1511.07111)
+
+Confusion loss: A classifier that tries to look at the features inside the convolutional nn and guess are these features of simulated image or real image, and then the gradient of the classifier is **reversed** and bp back into convolutional layers.
+
+This confusion loss is providing domain adaptation machinery just for the perception(希望从source/target 提取出来的features是invariance的). It's not attempting in any way to account for the physical discrepancy.
+
+![1528286735408](/assets/images/post_images/transfer learning/1528286735408.png)
+
+### Domain adaptation at the pixel level 
+
+相比于上一篇paper中propose的方法，这里in addition to trying to regularize the features with this kind of confusion loss, it also attempts to **make simulated observations themselves look more like real world ones**.利用到了GAN的架构
+
+![1528289788401](/assets/images/post_images/transfer learning/1528289788401.png)
+
+### Forward transfer summary 
+
+* Pretraining and finetuning
+
+  * Standard finetuning with RL is hard
+  * Maximum entropy formulation can help
+
+* How can we modify the source domain for transfer?
+
+  * Randomization can help a lot: the more diverse the better! 
+
+* How can we use modest amounts of target domain data?
+
+  * Domain adaptation: make the network unable to distinguish observations from the two domains
+  * or modify the source domain observations to look like target domain
+  * Only provides **invariance** – assumes all differences are **functionally irrelevant**; this is not always enough! 
+
+> 关于这里的functionally irrelevant: if there's some object or some kind of property in simulation that is not present in the real world or vice-versa, you can simply **ignore** it and still succeed at the task.
+>
+> 但是很多情况下是不能简单的ignore的，比如模拟行车的环境，若是模拟器没有模拟出行人，我们不能通过上述方法ignore掉pedestrians的存在。
+>
+> functional relevant vairation between two domain(**frontier of current research** in this field)
+
+## Multi-task transfer
+
+### Multiple source domains 
+
+* So far: more diversity = better transfer
+* Need to design this diversity
+  * E.g., simulation to real world transfer: randomize the simulation
+* What if we transfer from multiple ***different*** tasks?
+  * In a sense, closer to what people do: build on a lifetime of experience
+  * Substantially harder: past tasks don’t directly tell us how to solve the task in the target domain! 
+
+## Model-based reinforcement learning
+
+* If the past tasks are all different, what do they have in common? 
