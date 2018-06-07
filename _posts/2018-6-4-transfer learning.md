@@ -260,3 +260,91 @@ This confusion loss is providing domain adaptation machinery just for the percep
 ## Model-based reinforcement learning
 
 * If the past tasks are all different, what do they have in common? 
+* Idea 1: the laws of physics(宇宙中有着不变的规则，尝试extract those rules)
+  * Same robot doing different chores(杂物)
+  * Same car driving to different destinations
+  * Trying to accomplish different things in the same open-ended video game 
+* Simple version: train model on past tasks, and then use it to solve new tasks
+* More complex version: adapt or finetune the model to new task
+  * Easier than finetuning the policy in task is very different but physics are mostly the same
+
+### Example: 1-shot learning with model priors
+
+![1528359222238](/assets/images/post_images/transfer learning/1528359222238.png)
+
+> 这里的source domain和target domain是different assembly style task. There are a lot of  qualitative similarity between these tasks, but the gear aeesmbly is in some systematic different from many of the things it saw before.
+
+Reference: [<<One-Shot Learning of Manipulation Skills with Online Dynamics Adaptation and Neural Network Priors >>](https://arxiv.org/abs/1509.06841)
+
+We have a large collections of source domains and we want to use them to accelerate to perform one-shot learning in a target domain.使用two previous states and two previous actions然后预测next state. 这个model并不是直接用来planning in the target domain, 而是用来产生一个prior, 然后用这个prior和最近的batch experience一起快速得到一个target domain的model.
+
+### Can we solve multiple tasks at once? 
+
+* Sometimes learning a model is very hard
+* Can we learn a multi-task policy that can simultaneously perform many tasks?
+* Use  simultaneous transfer(使用一套同时解决多个task的问题, 注意区别上篇paper中学习出多个model的方法)
+* Idea 1: construct a joint MDP
+
+![1528361049137](/assets/images/post_images/transfer learning/1528361049137.png)
+
+> 注意上面那段话，**从初始的state分布中选取state，这包括了首先选取MDP，然后才是这个MDP里state的初始值，在此之后将完全处于这个MDP**
+>
+> 这种hybrid combination of multiple MDP实际上对应了另一个更庞大的MDP，理论上是tractable的。但由于MDP过于复杂(比如每一个Atari game都需要上千万步才能完成)，如果使用当下state-of-the-art的算法则是impractical的。
+
+* Idea 2: train in each MDP separately, and then combine the policies
+
+下面开始介绍Idea2
+
+### Actor-mimic and policy distillation 
+
+-----
+
+Backgound:  Ensembles & Distillation 
+
+**Ensemble models**: single models are often not the most robust – instead train many models and average their predictions
+
+* this is how most ML competitions (e.g., Kaggle) are won
+
+* this is very **expensive** at test time.
+
+**Can we make a single model that is as good as an ensemble?** 
+
+![1528376664145](/assets/images/post_images/transfer learning/1528376664145.png)
+
+> temperature: 参见[wiki](https://en.wikipedia.org/wiki/Softmax_function#Reinforcement_learning)
+>
+> 使用soft targets, **generalization** is better.
+>
+> Reference: [<<Distilling the Knowledge in a Neural Network>>](https://arxiv.org/abs/1503.02531) from Hinton
+
+-----
+
+* Single policy is going to be trained with distillation to have similar action distribution as the source policy.
+
+* Loss function: sample states and actions from expert policy(basically literally taking the data from the replay buffers of these policys such as Q learning), then maximizing the log probability of those actions under the actor mimic network.
+
+![1528382214236](/assets/images/post_images/transfer learning/1528382214236.png)
+
+![1528382987111](/assets/images/post_images/transfer learning/1528382987111.png)
+
+Reference: [<<Actor-Mimic: Deep Multitask and Transfer Reinforcement Learning>>](https://arxiv.org/abs/1511.06342)
+
+### How does the model know what to do? 
+
+* So far: what to do is apparent from the input (e.g., which game is being played)
+* What if the policy can do ***multiple*** things in the same environment? 
+
+由此引入了**contextual policies**
+
+![1528384589569](/assets/images/post_images/transfer learning/1528384589569.png)
+
+### Architectures for multi-task transfer
+
+* So far: single neural network for all tasks (in the end)
+* What if tasks have some shared parts and some distinct parts?
+  * Example: two cars, one with camera and one with LIDAR, driving in two different cities
+  * Example: ten different robots trying to do ten different tasks • Can we design architectures with reusable components?
+* Can we design architectures with ***reusable components***?
+
+Reference: [<<Learning Modular Neural Network Policies for Multi-Task and Multi-Robot Transfer>>](https://arxiv.org/abs/1609.07088)
+
