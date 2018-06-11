@@ -55,7 +55,7 @@ typora-root-url: ..
 >
 > ![1528116741950](/assets/images/post_images/transfer learning/1528116741950.png)
 >
-> 上图中的黑线是standard RL，红线对应的方法: 首先train了一个policy直至收敛，然后将最后一次nn的参数毁掉，但是保留了前面的卷积层参数，然后端到端retrain，其intuition是为了保留representation但是要移除decision-making ability。(而conv层并不能做决策，只有representation的功能。)
+> 上图中的黑线是standard RL，红线对应的方法: 首先train了一个policy直至收敛，然后将最后一层nn的参数毁掉，但是保留了前面的卷积层参数，然后端到端retrain，其intuition是为了保留representation但是要移除decision-making ability。(而conv层并不能做决策，只有representation的功能。)
 >
 > The gap between initial optimization and recovery shows a representation learning bottleneck.
 
@@ -337,6 +337,8 @@ Reference: [<<Actor-Mimic: Deep Multitask and Transfer Reinforcement Learning>>]
 由此引入了**contextual policies**
 
 ![1528384589569](/assets/images/post_images/transfer learning/1528384589569.png)
+
+> So far everything we've discussed assume of state space dimensionality does not change betweent tasks, there are a number of ways to handle **different state dimensionality** that are based around either **embedding** or modularity
 
 ### Architectures for multi-task transfer
 
