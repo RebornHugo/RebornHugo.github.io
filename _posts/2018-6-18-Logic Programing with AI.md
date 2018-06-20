@@ -44,9 +44,9 @@ typora-root-url: ..
 
 每一层因果推理都有syntactic signature形式
 
-* association layer: $P(y|x) = p$ stating that the probability of event Y = y given that we observed event X = x is equal to p. 可以使用贝叶斯网络或者深度学习来解决.
-* interventional layer: $P(y|do(x), z)$  denotes “The probability of event Y = y given that we intervene and set the value of X to x and subsequently observe event Z = z, 可以使用随机试验来估计或者Causal Bayesian Networks来具体分析求解. 小孩需要通过playful manipulation of the environment (usually in a deterministic playground) 学会Interventions的结果, AI则是通过exercising their designated sets of actions学会的. 也就是说这些Interventional expressions是不能单独地被动地就可以推断出的.
-* counterfactual layer: $P(y_x|x\prime, y\prime)$ stands for "The probability that event Y = y would be observed had X been x, given that we actually observed X to be $x\prime$ and Y to be $y\prime$" 例如，已知Joe读两年大学，他的工资就会是$y\prime$, 求Joe读完大学后薪资为y的概率. 只有在我们拥有functional or Structural Equation models时或具有这些模型的属性时，才能计算出来这类问题.
+* association layer: $$P(y|x) = p$$ stating that the probability of event Y = y given that we observed event X = x is equal to p. 可以使用贝叶斯网络或者深度学习来解决.
+* interventional layer: $$P(y|do(x), z)$$  denotes “The probability of event Y = y given that we intervene and set the value of X to x and subsequently observe event Z = z, 可以使用随机试验来估计或者Causal Bayesian Networks来具体分析求解. 小孩需要通过playful manipulation of the environment (usually in a deterministic playground) 学会Interventions的结果, AI则是通过exercising their designated sets of actions学会的. 也就是说这些Interventional expressions是不能单独地被动地就可以推断出的.
+* counterfactual layer: $$P(y_x|x\prime, y\prime)$$ stands for "The probability that event Y = y would be observed had X been x, given that we actually observed X to be $x\prime$ and Y to be $y\prime$" 例如，已知Joe读两年大学，他的工资就会是$y\prime$, 求Joe读完大学后薪资为y的概率. 只有在我们拥有functional or Structural Equation models时或具有这些模型的属性时，才能计算出来这类问题.
 
 上述三层结构及其所需要的形式限制解释了为什么基于纯统计的机器学习方法无法进行推理. 它也告诉了我们统计方法之外所需要其他的信息.
 
@@ -78,6 +78,8 @@ Problog程序和prolog类似, 有很多define clauses. 但是Problog中每个子
 ProbLog program $$T = \{p1 : c1, ··· ,pn : cn\}$$ defines a probability distributions over logic programs $$L\subseteq L_T=\{c_1,...,c_n\}$$ in the following way:
 
 $$P(L|T)=\Pi_{c_i\in L}p_i\Pi_{c_i\in L_T\\L}(1-p_i)$$
+
+
 
 Prolog语言关心的是一个query能否成功, 而Problog关心的则是一个query成功的概率. 并且再Problog程序T中的query q的成功概率$$P(q|T)$$可以定义为:
 
