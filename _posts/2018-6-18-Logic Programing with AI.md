@@ -13,7 +13,7 @@ typora-root-url: ..
 
 今早刷知乎时看到了这样一个问题, [为什么 AI 理解不了逻辑问题？](https://www.zhihu.com/question/269017357/answer/347226738)这学期在学习形式化验证这门课时我接触到了大量的逻辑推理,当时也思考过这个问题.当下state of the art 的AI模型普遍是基于统计的模型,无论是贝叶斯流派还是深度学习,其核心都是统计模型,需要大量的数据以及频繁的训练.这带来了两个直观的问题:
 
-* AI在解决问题上是没有**Intuition**的, 无法理解问题本身, 举例而言, 当前在NLP领域的很潮的LSTM,Attention的方法,CBOW,n-GRAM的模型, 它们都是基于词向量的表示, 词向量只是一种简单的统计. 机器甚至不能理解词的本身, 只能通过之间的Cosine similarity来判断他们的关系. 但人类不同, 比如"热"这个词, 人类真正会理解它是因为人类会出汗,  回想吃冰冷的失误来降温, 而这些都是最简单的Intuition和response而已. 不过也许可以通过transfer learning或者Inverse Reinforcement Learning等方法可以解决部分问题.
+* AI在解决问题上是没有**Intuition**的, 无法理解问题本身, 举例而言, 当前在NLP领域的很潮的LSTM,Attention的方法,CBOW,n-GRAM的模型, 它们都是基于词向量的表示, 词向量只是一种简单的统计. 机器甚至不能理解词的本身, 只能通过之间的Cosine similarity来判断他们的关系. 但人类不同, 比如"热"这个词, 人类真正会理解它是因为人类会出汗,  回想吃冰冷的失误来降温, 而这些都是最简单的Intuition和response而已. 不过通过transfer learning或者Inverse Reinforcement Learning等方法也许可以解决部分问题.
 * 机器做不到"乌鸦"的感知、认知、推理、学习、和执行, 参考朱松纯教授的[Invited Talk](https://mp.weixin.qq.com/s/-wSYLu-XvOrsST8_KEUa-Q). 
 
 -----
@@ -81,7 +81,9 @@ $$P(L|T)=\Pi_{c_i\in L}p_i\Pi_{c_i\in L_T\\L}(1-p_i)$$
 
 
 
-Prolog语言关心的是一个query能否成功, 而Problog关心的则是一个query成功的概率. 并且再Problog程序T中的query q的成功概率$$P(q|T)$$可以定义为:
+Prolog语言关心的是一个query能否成功, 而Problog关心的则是一个query成功的概率. 
+
+并且再Problog程序T中的query q的成功概率  $$P(q|T)$$  可以定义为:
 
 ![1529334863567](/assets/images/post_images/Logic Programing with AI/1529334863567.png)
 
