@@ -1,5 +1,5 @@
 ---
-title: Logic Programing with AI
+title: Logic Programing with Artificial Intelligence
 categories:
  - AI
 tag:
@@ -45,8 +45,8 @@ typora-root-url: ..
 每一层因果推理都有syntactic signature形式
 
 * association layer: $$P(y|x) = p$$ stating that the probability of event Y = y given that we observed event X = x is equal to p. 可以使用贝叶斯网络或者深度学习来解决.
-* interventional layer: $$P(y|do(x), z)$$  denotes “The probability of event Y = y given that we intervene and set the value of X to x and subsequently observe event Z = z, 可以使用随机试验来估计或者Causal Bayesian Networks来具体分析求解. 小孩需要通过playful manipulation of the environment (usually in a deterministic playground) 学会Interventions的结果, AI则是通过exercising their designated sets of actions学会的. 也就是说这些Interventional expressions是不能单独地被动地就可以推断出的.
-* counterfactual layer: $$P(y_x|x\prime, y\prime)$$ stands for "The probability that event Y = y would be observed had X been x, given that we actually observed X to be $x\prime$ and Y to be $y\prime$" 例如，已知Joe读两年大学，他的工资就会是$y\prime$, 求Joe读完大学后薪资为y的概率. 只有在我们拥有functional or Structural Equation models时或具有这些模型的属性时，才能计算出来这类问题.
+* interventional layer: $$P(y|do(x), z)$$  denotes “The probability of event Y = y given that we intervene and set the value of X to x and subsequently observe event Z = z, 可以使用随机试验来估计或者Causal Bayesian Networks来具体分析求解. 如果说小孩子需要通过playful manipulation of the environment (usually in a deterministic playground) 学会Interventions的结果, 那AI则是通过exercising their designated sets of actions学会的. 也就是说这些Interventional expressions是不能单独地被动地就可以推断出的.
+* counterfactual layer: $$P(y_x|x\prime, y\prime)$$ stands for " The probability that event Y = y would be observed had X been x, given that we actually observed X to be $x\prime$ and Y to be $y\prime$ " 例如，已知Joe读两年大学，他的工资就会是$y\prime$, 求Joe读完大学后薪资为y的概率. 只有在我们拥有functional or Structural Equation models时或具有这些模型的属性时，才能计算出来这类问题.
 
 上述三层结构及其所需要的形式限制解释了为什么基于纯统计的机器学习方法无法进行推理. 它也告诉了我们统计方法之外所需要其他的信息.
 
@@ -77,13 +77,16 @@ Problog程序和prolog类似, 有很多define clauses. 但是Problog中每个子
 
 ProbLog program $$T = \{p1 : c1, ··· ,pn : cn\}$$ defines a probability distributions over logic programs $$L\subseteq L_T=\{c_1,...,c_n\}$$ in the following way:
 
-$$P(L|T)=\Pi_{c_i\in L}p_i\Pi_{c_i\in L_T\\L}(1-p_i)$$
-
-
-
+$$
+P(L|T)=\Pi_{c_i\in L}p_i\Pi_{c_i\in L_T\\L}(1-p_i)
+$$
 Prolog语言关心的是一个query能否成功, 而Problog关心的则是一个query成功的概率. 
 
-并且再Problog程序T中的query q的成功概率  $$P(q|T)$$  可以定义为:
+并且再Problog程序T中的query q的成功概率 
+$$
+P(q|T)
+$$
+可以定义为:
 
 ![1529334863567](/assets/images/post_images/Logic Programing with AI/1529334863567.png)
 
@@ -102,11 +105,30 @@ Prolog语言关心的是一个query能否成功, 而Problog关心的则是一个
 
 这篇paper是今年六月发表再arxiv上的, 值得一提的是这篇[paper](http://arxiv.org/abs/1806.01261)的作者居然有27位, 我很少见过如此多人署名的一篇paper. 并且都来自于DeepMind, google brain, MIT, Edinburgh顶级研究机构.
 
-这篇paper同时还是意见书, 综述, 和unification. 其中提到: 如果AI要实现人类一样的能力, 必须将组合泛化（combinatorial generalization）作为重中之重, 而结构化的表示和计算是实现这一目标的关键. 图(Graph)的一阶逻辑和概率推理
+这篇paper同时还是意见书, 综述, 和unification. 其中提到: 如果AI要实现人类一样的能力, 必须将组合泛化（combinatorial generalization）作为重中之重, 而结构化的表示和计算(structured representations and computation)是实现这一目标的关键. 图(Graph)的一阶逻辑和概率推理
 
-在论文里，作者探讨了如何在深度学习结构（比如全连接层、卷积层和递归层）中，使用关系归纳偏置（relational inductive biases），促进对实体、对关系，以及对组成它们的规则进行学习。
+在论文里，作者探讨了如何在深度学习结构（比如全连接层、卷积层和递归层）中，使用关系归纳偏置（**relational inductive biases**），促进对实体、关系，以及组成它们的规则进行学习。
 
 他们提出了一个新的AI模块——**图网络（graph network）**，是对以前各种对图进行操作的神经网络方法的推广和扩展。图网络具有强大的关系归纳偏置，为操纵结构化知识和生成结构化行为提供了一个直接的界面。
 
-作者还讨论了图网络如何支持关系推理和组合泛化，为更复杂、可解释和灵活的推理模式打下基础。
+作者还讨论了图网络如何支持关系推理和组合泛化，可以作为更复杂、可解释和灵活的推理模式的基础。
 
+-----
+
+以下对两个概念进行剖析。
+
+**Inductive biases**
+
+如果说learning是一个通过最大化reward或者获得对数据更好的representation以得到一个解空间的过程，那么在这个过程中，会出现不同的Solution是equally good的情况。而Inductive biases可以用来判断这些equally good的Solution的优先级(independent of the observed data)。比如贝叶斯模型中的先验模型的选择和参数化，在其他模型中可以是用以避免过拟合的正则化项。**Inductive biases可以解释为data-generating过程或者是the space of solutions的假设。**L2正则化的assumption是参数值更小的方案更好，DNN的inductive biases是hierarchical processing，CNN的inductive biases是locality and translation invariance。
+
+> 注意这些假设不必是explicit，它们反映了interpretations of how a model or algorithm interfaces with the world.
+
+**graph**
+
+这篇paper提出了它们的图网络框架，它是一类用图结构表示来进行关系推理的函数。这些图结构可以表示神经网络或者MPNN等结构。graph中核心是GN block，是一类将图作为输入，对结构执行计算，并返回图作为输出的"graph to graph"模块。其中实体表示为图的nodes，关系表示为edges。
+
+------
+
+我个人觉得图网络实做起来会很困难，比如求导是个严肃的问题，构图也需要手工进行，效率极低。全篇paper花了大量笔墨于此，但这个领域要有所突破是很困难的。所以这篇paper更像是review或者是intro，这些方法需要后人大量研究。将一阶推理和统计学习结合有很长的路要走。
+
+当下真正的问题是如何**无监督**地将场景解析为对象/实体及其之间的关系，而不是当你拥有所有关系和对象时再来构图。
