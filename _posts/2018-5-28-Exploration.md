@@ -292,8 +292,10 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 
 ### information gain about *what*?
 
-回忆information gain: $IG(z,y|a)=E_y[\mathcal{H}(\hat{p}(z))-\mathcal{H}(\hat{p}(z)|y))|a]$
-
+回忆information gain: 
+$$
+IG(z,y|a)=E_y[\mathcal{H}(\hat{p}(z))-\mathcal{H}(\hat{p}(z)|y))|a]
+$$
 第一个需要解决的问题是：**information gain about *what*?**
 
 以下是几种选择思路
@@ -306,7 +308,7 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 
   > peculiar, make sense: 玩蒙特祖玛的复仇时如果新开了一扇门，那么这个state的density会上升
 
-* dynamics $p(s\prime|s,a)$
+* dynamics $$p(s\prime|s,a)$$
 
   > directly analogous to the bandit setting, $\theta$ in bandit 就是它的model, 而这里dynamics也是model
   >
@@ -320,21 +322,23 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 
   > 可以把prediction gain当做bonus, 以上的p是count based method 里面的 **density** model
 
-* variational inference:  首先，当使用dynamics来作为$Z$(latent variable)时，IG等价于$D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))$
-
+* variational inference:  首先，当使用dynamics来作为$Z$(latent variable)时，IG等价于
+  $$
+  D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))
+  $$
   ![1528019715834](/assets/images/post_images/Exploration/1528019715834.png)
 
   这套方法叫做VIME，参考[<<VIME: Variational Information Maximizing Exploration>>](https://arxiv.org/abs/1605.09674) Implementation如下： 
 
   ![123](/assets/images/post_images/Exploration/123-1528031151310.PNG)
 
-> $p(h|\theta)$比$p(\theta|h)$容易获得
+> $$p(h|\theta)$$比$$p(\theta|h)$$容易获得
 >
 > 注意区分上面两个KL divergence。
 
 简单来说，就是使用独立的高斯分布作为dynamics nn的参数，仍然使用bp来update对应的参数$\phi$。
 
-使用最终的$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$ 作为bonus来进行exploration。
+使用最终的$$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$$作为bonus来进行exploration。
 
 ![1528033223285](/assets/images/post_images/Exploration/1528033223285.png)
 
@@ -342,7 +346,7 @@ bootstrap是很容易想到的，这就是机器学习里ensemble方法中的一
 
 ### Exploration with model errors 
 
-VIME中，$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$是用来更新网络中的$\phi$值，如果抛开information gain的思路，可以有更简单的方法来measure
+VIME中，$$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$$是用来更新网络中的$\phi$值，如果抛开information gain的思路，可以有更简单的方法来measure
 
 Stadie et al. 2015:
 
