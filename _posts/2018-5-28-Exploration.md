@@ -300,7 +300,7 @@ $$
 
 以下是几种选择思路
 
-* information gain about reward function $r(s,a)$
+* information gain about reward function $r(s,a)​$
 
   > cons: not very useful if reward is sparse
 
@@ -308,7 +308,10 @@ $$
 
   > peculiar, make sense: 玩蒙特祖玛的复仇时如果新开了一扇门，那么这个state的density会上升
 
-* dynamics $$p(s\prime|s,a)$$
+* dynamics 
+  $$
+  p(s\prime|s,a)
+  $$
 
   > directly analogous to the bandit setting, $\theta$ in bandit 就是它的model, 而这里dynamics也是model
   >
@@ -332,13 +335,26 @@ $$
 
   ![123](/assets/images/post_images/Exploration/123-1528031151310.PNG)
 
-> $$p(h|\theta)$$比$$p(\theta|h)$$容易获得
+> $$
+> p(h|\theta)
+> $$
+>
+> 比
+> $$
+> p(\theta|h)
+> $$
+> 容易获得
 >
 > 注意区分上面两个KL divergence。
 
 简单来说，就是使用独立的高斯分布作为dynamics nn的参数，仍然使用bp来update对应的参数$\phi$。
 
-使用最终的$$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$$作为bonus来进行exploration。
+使用最终的
+
+$$
+D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))
+$$
+作为bonus来进行exploration。
 
 ![1528033223285](/assets/images/post_images/Exploration/1528033223285.png)
 
@@ -346,7 +362,11 @@ $$
 
 ### Exploration with model errors 
 
-VIME中，$$D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))$$是用来更新网络中的$\phi$值，如果抛开information gain的思路，可以有更简单的方法来measure
+VIME中，
+$$
+D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))
+$$
+是用来更新网络中的$\phi$值，如果抛开information gain的思路，可以有更简单的方法来measure
 
 Stadie et al. 2015:
 
