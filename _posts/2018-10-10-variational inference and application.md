@@ -1,11 +1,9 @@
 ---
 title: variational inference and application
 categories:
- - ML
-tag:
- - Reinforcement Learning
  - Machine Learning
- - Mathematical
+tag:
+ - ML
 
 typora-copy-images-to: ../assets/images/post_images/variational inference and application
 typora-root-url: ..
@@ -243,6 +241,8 @@ $$
   $$
   H(\Theta|\xi_t,a_t)-H(\Theta|S_{t+1},\xi_t,a_t)=I(S_{t+1};\mathbb{\Theta}|\xi_t,a_t)=\mathbb{E_{s_{t+1}\sim \mathcal{P(\cdot|\xi_t,a_t)}}}D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))
   $$
+
+
 
 
 
