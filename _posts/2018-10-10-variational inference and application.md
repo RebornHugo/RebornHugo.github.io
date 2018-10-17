@@ -9,15 +9,15 @@ typora-copy-images-to: ../assets/images/post_images/variational inference and ap
 typora-root-url: ..
 ---
 
-理解并推导变分推断，并应用于variational linear regression，variational linear EM，variational autoencoder， Weight Uncertainity in Neural Networks， VIME。
+理解并推导变分推断，并应用于variational linear regression，variational EM，variational autoencoder， Weight Uncertainity in Neural Networks， VIME。
 
-> 所谓变分法(variational method)，相对于(standard calulars)而言，后者用于finding derivatives of functions，前者涉及到泛函分析，用于define a functional as a mapping that takes a function as the input and that returns the value of the functional as the output。此处主要用于逼近posterior，并最大化似然。
+> 所谓变分法(variational method)，相对于(standard calulars)而言，后者用于finding derivatives of functions，前者涉及到泛函分析，用于define a functional as a mapping that takes a function as the input and that returns the value of the functional as the output。此处主要用于逼近posterior。
 
 # Material
 
 PRML chapter10
 
-course from 徐亦达
+[course from 徐亦达](https://www.bilibili.com/video/av24062247)
 
 [Video from Berkeley CS294-112](https://www.bilibili.com/video/av31527294/?p=14)
 
@@ -80,7 +80,7 @@ M step: maximize ELBO w.r.t. $p(X,Z|\theta)$
 ## mean field
 
 变分推断的核心是利用$$q(Z)$$来逼近后验$p(Z|X)$，根据问题的不同，有时还会需要最大化似然$p_\theta(x)$，比如上述
-EM算法中的生成模型中，最大化似然其核心目标。但是在以variational linear regression为代表的conditional  models中，likelihood $$lnp(t|x)$$是不变的，逼近后验使得$$q(w,\alpha)\approx p(w,\alpha|t,x)$$，最终利用此后验来构建predictive distribution($$p(t|x,\mathbb{t})=\int p(t|x,w)p(w|\mathbb{t})dw$$)才是该问题核心。
+EM算法中的生成模型中，最大化似然其核心目标，不过会用到VI来计算后验。但是在以variational linear regression为代表的conditional  models中，likelihood $$\log p(t|x)$$是不变的，逼近后验使得$$q(w,\alpha)\approx p(w,\alpha|t,x)$$，最终利用此后验来构建predictive distribution($$p(t|x,\mathbb{t})=\int p(t|x,w)p(w|\mathbb{t})dw$$)才是该问题核心。
 
 利用PRML  p465中的推导(mean field)，可以最大化ELBO得到迭代解。
 
@@ -94,17 +94,17 @@ EM算法中的生成模型中，最大化似然其核心目标。但是在以var
 
 上述推导的核心在于将多个隐变量后验$p(Z|X)$近似为$q(Z)=\prod_{i=1}^Mq_i(Z_i)$，假设此处的$Z_i$独立(注意后验中的多个隐变量不独立，比如变分线性回归中的隐变量$w,\alpha$分别代表weight和weight的precision)，update $q(Z)$来最大化ELBO，当ELBO最大(等于$lnp(X)$)时，KL散度为0，即做到了$p(Z|X)=q(Z)$
 
-上述使用mean field theory来最大化ELBO的方法，在变分线性回归中有使用，它存在的最大问题是假设后验中每个隐变量是独立的，这可能带来较为严重的精度问题。
+上述使用mean field theory来最大化ELBO的方法，在变分线性回归中有使用，它存在的最大问题是**假设后验中每个隐变量是独立**的，这可能带来较为严重的**精度问题**。
 
 ## variational linear regression
 
-variational linear regression的基础是bayesian linear regression(PRML chapter 3)，后者使用MAP找到最大后验，此问题中为$p(w,\alpha|\mathbb{t,x})$ 。可以用来预测target的分布$$p(t|\mathbb{x,t})=\int p(t|x,w)p(w|\mathbb{t})dw$$
+variational linear regression的基础是bayesian linear regression(PRML chapter 3)，后者直接计算后验(此问题中为$p(w,\alpha|\mathbb{t,x})$ )，变分法则是近似算出后验。最终使用后验用来预测target的分布$$p(t|\mathbb{x,t})=\int p(t|x,w)p(w|\mathbb{t})dw$$
 
 ![1539249110290](/assets/images/post_images/variational inference and application/1539249110290.png)
 
 * linear regression与EM，VAE这类generative model不同，回归问题应该是conditional model $p(t|x)$，注意该模型中$x$永远在conditional bar的右边，对每个$x_i$应该有个对应的target $t_i$。
 
-* EM中$P_\theta(X)$通常是GMM等生成模型，我们还需要通过调整$\theta $ (GMM中的每个高斯的均值和方差/general latent variable中nn的参数)来最大化似然。但是在linear regression中，此处的$P_\theta(X)$对应$P(t|X)$，且$P(t|X)$不含$\theta$，不会改变，故**只需要逼近后验**，而**无需MLE**。
+* EM中$P_\theta(X)$通常是GMM等生成模型，我们还需要通过调整$\theta $ (GMM中的每个高斯的均值和方差/general latent variable中nn的参数)来最大化似然。但是在(variational) bayesian linear regression中，此处的$P_\theta(X)$对应$P(t|X)$，且$P(t|X)$不含$\theta$，不会改变，故**只需要逼近后验**，而**无需MLE**。
 
   > $$t\sim\mathcal{N}(w^T\phi_n(x), \beta^{-1}) $$
   >
@@ -166,19 +166,19 @@ $$
 
 最后使用gradient descend来更新$\phi$
 
-> 问题：把每个维度的$p(w|X,t)​$看作独立的分布，带来的精度问题？
+> 问题：把每个维度的$p(w|X,t)$看作独立的分布，带来的精度问题？
 
 ## VIME
 
 我在[exploration一节](https://rebornhugo.github.io/reinforcement%20learning/2018/05/28/Exploration/)已经总结过vime算法，它exploration的要点是information gain，并扩展到了deep RL中。
 
-### information theory
+### recap information theory
 
 参考PRML chapter 1.6 & wiki <u>[Mutual information](https://en.wikipedia.org/wiki/Mutual_information)</u>   [<u>Entropy</u>](https://en.wikipedia.org/wiki/Entropy_(information_theory))   <u>[conditional entropy](https://en.wikipedia.org/wiki/Conditional_entropy)</u>
 
 ![img](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Entropy-mutual-information-relative-entropy-relation-diagram.svg/256px-Entropy-mutual-information-relative-entropy-relation-diagram.svg.png)
 
-$I(X;Y)$表示X，Y的互信息: we can view the mutual information as the reduction in the uncertainty about x
+$I(X;Y)$表示X，Y的互信息: we can view the mutual information as the **reduction in the uncertainty** about x
 by virtue of being told the value of y (or vice versa)
 $$
 I(X;Y)=\int_\mathcal{Y}\int_{\mathcal{X}}p(x,y)log(\frac{p(x,y)}{p(x)p(y)})dxdy=H(Y)-H(Y|X)
@@ -194,7 +194,7 @@ I(X;Y)&=\int_\mathcal{Y}\int_{\mathcal{X}}p(y)p(x|y)log(\frac{p(y)p(x|y)}{p(x)p(
 \end{equation}
 $$
 
-> Relation to Kullback–Leibler divergence  该公式会在后面推到中使用
+> Relation to Kullback–Leibler divergence  该公式会在后面推导信息增益时会使用
 
 ### information gain
 
@@ -237,13 +237,10 @@ $$
 
   > 可以把prediction gain当做bonus, 以上的p是count based method 里面的 **density** model
 
-- variational inference:  首先，当使用dynamics来作为$Z$(latent variable)时，根据前面推导的公式，IG等价于：
+- variational inference:  首先，当使用dynamics来作为$Z$(latent variable)时，根据前文推导的公式(relation to KL)，IG等价于：
   $$
   H(\Theta|\xi_t,a_t)-H(\Theta|S_{t+1},\xi_t,a_t)=I(S_{t+1};\mathbb{\Theta}|\xi_t,a_t)=\mathbb{E_{s_{t+1}\sim \mathcal{P(\cdot|\xi_t,a_t)}}}D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))
   $$
-
-
-
 
 
 
@@ -266,7 +263,9 @@ $$
 $$
 D_{KL}(q(\theta|\phi\prime)||q(\theta|\phi))
 $$
-作为reward的bonus来进行exploration。
+作为reward的bonus来进行exploration。显然，这里的dynamics nn与前文所述的<<weight uncertainty in nn>>中的网络无本质区别，推导完全相同，无非是bnn的输入从$X$换成了$S_t,a_t$，输出从$t$换成了$S_{t+1}$
+
+> 由于使用的是reward + bonus，故这里的exploration会推迟进行
 
 ![1528033223285](/assets/images/post_images/Exploration/1528033223285.png)
 
@@ -322,6 +321,8 @@ $$
 
 ![1539517020863](/assets/images/post_images/variational inference and application/1539517020863.png)
 
+> 重参数化的要求更强(连续隐变量)，一般能用重参数化尽量才用。
+
 ## variational autoencoder
 
 ![1539517158851](/assets/images/post_images/variational inference and application/1539517158851.png)
@@ -332,4 +333,4 @@ sampling: $$z\sim p(z)$$   $$x\sim p(x|z)$$
 
 why dose this work?  $$\mathcal{L}_i=E_{z\sim q_{\phi}(z|x_i)}[\log p_\theta(x_i|z)]-D_{KL}(q_\phi(z|x_i)||p(z ))$$
 
-观察这个loss函数，直觉上可以理解为：我们在用encoder $q_\phi(z|x_i)$来逼近先验$p(z)$，故从$q_\phi(z|x_i)$中sample出来的z对应的$p_\theta(x_i|z)$可以表示为的$x_i$
+观察这个loss函数，直觉上可以理解为：使用encoder $q_\phi(z|x_i)$来逼近先验$p(z)$，故从$q_\phi(z|x_i)$中sample出来的z对应的$p_\theta(x_i|z)$可以表示为$x_i$
