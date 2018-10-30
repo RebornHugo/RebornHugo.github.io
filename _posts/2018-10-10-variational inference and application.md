@@ -51,9 +51,9 @@ $$
 \mathcal{L}(q, \theta)=\sum_zq(Z)\log\frac{p(X,Z|\theta)}{q(Z)}\\
 KL(q||p)=-\sum_zq(X)\log{\frac{p(Z|X,\theta)}{q(Z)}}
 $$
-显然，ELBO是最终的$lnp(X|\theta)$的下界。
+显然，ELBO是最终的$\log p(X|\theta)$的下界。
 
-E step: compute posterior, set $p(Z|X, \theta)$ to $q(Z)$ to minimize KL
+E step: compute posterior, set $p(Z|X, \theta)​$ to $q(Z)​$ to minimize KL
 
 ![1539222143821](/assets/images/post_images/variational inference and application/1539222143821.png)
 
@@ -286,6 +286,7 @@ $$
   $$
   H(\Theta|\xi_t,a_t)-H(\Theta|S_{t+1},\xi_t,a_t)=I(S_{t+1};\mathbb{\Theta}|\xi_t,a_t)=\mathbb{E_{s_{t+1}\sim \mathcal{P(\cdot|\xi_t,a_t)}}}D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))
   $$
+
 
 
 
