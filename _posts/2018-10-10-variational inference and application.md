@@ -39,7 +39,7 @@ $p(z)$可以是一个均值0方差I的简单高斯，此时z只是一个低维�
 
 * Intuition: "guess" most likely z given $x_i$, and pretend it's the right one
 
-* $\theta \leftarrow argmax_\theta\frac{1}{N}\sum_iE_{z\sim p(z|x_i)}[logp_\theta(x_i,z)]$
+* $\theta \leftarrow arg\max_\theta\frac{1}{N}\sum_iE_{z\sim p(z|x_i)}[logp_\theta(x_i,z)]$
 
 * In the E step, we use the current parameter values θ old to find the posterior distribution of the latent variables given by p(Z|X, θ old ). We then use this posterior distribution to find the expectation of the **complete-data log likelihood** evaluated for some general parameter value θ
 
@@ -47,9 +47,9 @@ $p(z)$可以是一个均值0方差I的简单高斯，此时z只是一个低维�
 
 在EM算法中，为了最大化似然(常见于GMM)
 $$
-lnp(X|\theta)=\mathcal{L}(q, \theta)+KL(q||p)\\
-\mathcal{L}(q, \theta)=\sum_zq(Z)ln\{\frac{p(X,Z|\theta)}{q(Z)}\}\\
-KL(q||p)=-\sum_zq(X)ln\{{\frac{p(Z|X,\theta)}{q(Z)}}\}
+\log p(X|\theta)=\mathcal{L}(q, \theta)+KL(q||p)\\
+\mathcal{L}(q, \theta)=\sum_zq(Z)\log\frac{p(X,Z|\theta)}{q(Z)}\\
+KL(q||p)=-\sum_zq(X)\log{\frac{p(Z|X,\theta)}{q(Z)}}
 $$
 显然，ELBO是最终的$lnp(X|\theta)$的下界。
 
@@ -143,10 +143,10 @@ $$
 \begin{equation} \label{eq1}
 \begin{split}
 \phi^\star&=arg\min_{\phi}KL[q(w|\phi)||p(w|X,t)]\\
-&=arg\min_\phi\int q(w|\phi)log\frac{q(w|\phi)}{p(w|X,t)}dw\\
-&=arg\min_\phi\int q(w|\phi)log\frac{q(w|\phi)p(t|X)}{p(w|X)p(t|w,X)}dw\\
-&=arg\min_\phi KL[q(w|\phi)||p(w|X)]-\mathbb{E}_{q(w|\phi)}[logp(t|w,X)]+E_{q(w|\phi)}[logp(t|X)]\\
-&=arg\min_\phi logp(t|X)-\underbrace{(\mathbb{E}_{q(w|\phi)}[logp(t|w,X)-logq(w|\phi)+logp(w)])}_{ELBO}
+&=arg\min_\phi\int q(w|\phi)\log \frac{q(w|\phi)}{p(w|X,t)}dw\\
+&=arg\min_\phi\int q(w|\phi)\log \frac{q(w|\phi)p(t|X)}{p(w|X)p(t|w,X)}dw\\
+&=arg\min_\phi KL[q(w|\phi)||p(w|X)]-\mathbb{E}_{q(w|\phi)}[\log p(t|w,X)]+E_{q(w|\phi)}[\log p(t|X)]\\
+&=arg\min_\phi \log p(t|X)-\underbrace{(\mathbb{E}_{q(w|\phi)}[\log p(t|w,X)-\log q(w|\phi)+\log p(w)])}_{ELBO}
 \end{split}
 \end{equation}
 $$
@@ -156,17 +156,62 @@ $$
 $$
 \begin{equation} \label{eq2}
 \begin{split}
--ELBO&=\mathbb{E}_{q(w|\phi)}[logq(w|\phi)-logp(w)-logp(t|w,X)])\\
-&\approx\sum_{i=1}^{n}logq(w^{(i)}|\phi)-logp(w^{(i)})-logp(t|w^{(i)},X)
+-ELBO&=\mathbb{E}_{q(w|\phi)}[\log q(w|\phi)-\log p(w)-\log p(t|w,X)])\\
+&=\mathbb{E}_{\epsilon\sim \mathcal{N(0,1)}}[\log q((\mu+\epsilon\sigma)|\phi)]-\log p(\mu+\epsilon\sigma)-\log p(t|(\mu+\epsilon\sigma),X) \\
+&\approx\sum_{i=1}^{n}\log q(w^{(i)}|\phi)-\log p(w^{(i)})-\log p(t|w^{(i)},X)
 \end{split}
 \end{equation}
 $$
+
+其中$$\mu, \sigma=\phi[0, 1]$$
+
+> problem：必须使用重参数化！！不然此处近似有误！
+>
+> 因为$w$是从$q(w|\phi)$中sample出来的，对$\phi$求导时有影响
+
+
+
+
 
 三项分别为: variational posterior, prior, likelihood
 
 最后使用gradient descend来更新$\phi$
 
+* for **sequential data** (usually occur in reinforcement learning):
+
+* $$
+  \begin{equation} \label{eq4}
+  \begin{split}
+  -ELBO&=KL[q(w|\phi)||P(w)]-\mathbb{E}_{q(w|\theta)}[\log P(\mathcal{D}|w)]\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)}{P(w)P(\mathcal{D}_{t-1},x_t|w)}dw\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)}{P(\mathcal{D}_{t-1},x_t,w)}dw\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)P(\mathcal{D}_{t-1})}{P(\mathcal{D}_{t-1},x_t,w)}dw-\underbrace{\int q(w|\phi)\log P(\mathcal{D}_{t-1})dw}_{const=\log P(\mathcal{D}_{t-1})} \\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)P(\mathcal{D}_{t-1})}{P(x_t,w|\mathcal{D}_{t-1})P(\mathcal{D}_{t-1})}dw-const\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)}{P(x_t,w|\mathcal{D}_{t-1})}dw-const\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)}{P(w|\mathcal{D}_{t-1})P(x_t|w,\mathcal{D}_{t-1})}dw-const\\
+  &=\int q(w|\phi)\log \frac{q(w|\phi)}{P(w|\mathcal{D}_{t-1})P(x_t|w,\mathcal{D}_{t-1})}dw-const\\
+  &=KL[q(w|\phi)||P(w|\mathcal{D}_{t-1})]-\mathbb{E}_{w\sim q(\cdot|\phi)}[\log P(x_t|w,\mathcal{D}_{t-1})]-const\\
+  \end{split}
+  \end{equation}
+  $$
+
+  if previous step is fully update, then $q(w|\phi_{t-1})=P(w|D_{t-1})$, this is a **prior** w.r.t the new data $x_t$, we can easily find in these deduce process, the first row is analogous to the last row.
+
+* $$
+  \begin{equation} \label{eq5}
+  \begin{split}
+  \phi^\prime&=arg\min_\phi[-ELBO]\\
+  &=arg\min_\phi[KL[q(w|\phi)||q(w|\phi_{t-1})]-\mathbb{E}_{w\sim q(\cdot|\phi)}[\log P(x_t|w,\mathcal{D}_{t-1})]]
+  \end{split}
+  \end{equation}
+  $$
+
+  in the case of <<VIME>>, we use this equation (12) to update BNN, note that $\mathcal{D}_{t-1} $ is past trajectories $\xi_t,a_t$,  and $x_t$ is $s_t$
+
+
 > 问题：把每个维度的$p(w|X,t)$看作独立的分布，带来的精度问题？
+>
+> 参考[Importance Weighted Autoencoders](https://arxiv.org/abs/1509.00519)
 
 ## VIME
 
@@ -188,7 +233,7 @@ $$
 \begin{equation} \label{eq3}
 \begin{split}
 I(X;Y)&=\int_\mathcal{Y}\int_{\mathcal{X}}p(y)p(x|y)log(\frac{p(y)p(x|y)}{p(x)p(y)})dxdy\\
-&=\int_{\mathcal{Y}}D_{KL}(p(x|y)||p(x))\\
+&=\int_{\mathcal{Y}}p(y)D_{KL}(p(x|y)||p(x))\\
 &=\mathbb{E}_Y[D_{KL}(p(x|y)||p(x))]
 \end{split}
 \end{equation}
@@ -241,6 +286,13 @@ $$
   $$
   H(\Theta|\xi_t,a_t)-H(\Theta|S_{t+1},\xi_t,a_t)=I(S_{t+1};\mathbb{\Theta}|\xi_t,a_t)=\mathbb{E_{s_{t+1}\sim \mathcal{P(\cdot|\xi_t,a_t)}}}D_{KL}(p(\theta|h,s_t,a_t,s_{t+1}||p(\theta|h)))
   $$
+
+
+
+
+
+
+
 
 
 
@@ -321,7 +373,9 @@ $$
 
 ![1539517020863](/assets/images/post_images/variational inference and application/1539517020863.png)
 
-> 重参数化的要求更强(连续隐变量)，一般能用重参数化尽量才用。
+> 重参数化的要求更强(连续隐变量)，但一般能用重参数化尽量采用
+>
+> reparameterization trick and the basic REINFORCE-like update are **both unbiased** estimators of the same gradient, but reparameterization trick update tends to have lower variance in practice because it makes use of the log-likelihood gradients with respect to the **latent variables**.
 
 ## variational autoencoder
 
